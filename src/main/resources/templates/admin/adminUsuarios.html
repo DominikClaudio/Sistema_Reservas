@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Panel Administrador</title>
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+	<nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+	<div class="admin-contenido">
+		<div class="general-container">
+			<form th:action="@{/admin/usuarios}" method="get" class="form-filtro">
+				<div class="primer-container">
+					<div class="sub-primer-container">
+						<div class="campo">
+							<label>Rol del Usuario</label><select name="rolid">
+								<option value="">Todos</option>
+								<option th:each="r : ${roles}" th:value="${r.idrol}"
+									th:text="${r.nombre}"
+									th:selected="${rolSeleccionado} == ${r.idrol}"></option>
+							</select>
+						</div>
+						<div class="campo">
+							<button type="submit" class="btn">Buscar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Apellido</th>
+						<th>DNI</th>
+						<th>Email</th>
+						<th>Rol</th>
+						<th>Acción</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="u : ${usuarios}">
+						<td th:text="${u.nombre}"></td>
+						<td th:text="${u.apellido}"></td>
+						<td th:text="${u.dni}"></td>
+						<td th:text="${u.correo}"></td>
+						<td th:text="${u.rolNombre}"></td>
+						<td th:text="${u.rolId}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

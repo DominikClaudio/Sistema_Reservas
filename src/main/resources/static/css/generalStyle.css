@@ -1,0 +1,99 @@
+/* Fondo completo */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    background: url('../imagenes/fondo-hotel.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+/** ESCROLL GENERAL*/
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Barra de navegación */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+}
+
+.navbar-seccion {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.izquierda {
+    justify-content: flex-start;
+}
+
+.centro {
+    justify-content: center;
+}
+
+.derecha {
+    justify-content: flex-end;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+}
+
+.nav-links li a:hover {
+    color: #ffd700;
+}
+
+.nav-links li a.activo {
+    border-bottom: 2px solid #ffd700;
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.btn-login {
+    background-color: #ffd700;
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 18px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.btn-login:hover {
+    background-color: #e5c100;
+}
+

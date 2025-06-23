@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Panel Administrador</title>
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+	<nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+	<div class="admin-contenido">
+		<div class="general-container">
+			<form th:action="@{/admin/inicio}" method="get" class="form-filtro">
+				<div class="primer-container">
+					<div class="sub-primer-container">
+						<div class="campo">
+							<label>Tipo de Habitación</label> <select name="tipoHabId">
+								<option value="">Todos</option>
+								<option th:each="tipo : ${tipos}" th:value="${tipo.idtipohab}"
+									th:text="${tipo.nombre}"></option>
+							</select>
+						</div>
+						<div class="campo">
+							<label>Estado Habitación</label> <select name="estadoHabId">
+								<option value="">Todos</option>
+								<option th:each="estado : ${estadosHab}" th:value="${estado.idestadohab}"
+									th:text="${estado.nombre}"></option>
+							</select>
+						</div>
+						<div class="campo">
+							<label>Estado Reserva</label> <select name="estadoReservaId">
+								<option value="">Todos</option>
+								<option th:each="estado : ${estadosReserva}"
+									th:value="${estado.idestadores}" th:text="${estado.nombre}"></option>
+							</select>
+						</div>
+						<div class="campo">
+							<label>Fecha Entrada</label> <input type="date"
+								name="fechaInicio" />
+						</div>
+						<div class="campo">
+							<label>Fecha Salida</label> <input type="date" name="fechaFin" />
+						</div>
+						<div class="campo">
+							<button type="submit" class="btn">Buscar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<table>
+				<thead>
+					<tr>
+						<th>N° Hab.</th>
+						<th>Tipo</th>
+						<th>Piso</th>
+						<th>Precio</th>
+						<th>Estado Hab.</th>
+						<th>Estado Reserva</th>
+						<th>Cliente</th>
+						<th>Desde</th>
+						<th>Hasta</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="h : ${habitaciones}">
+						<td th:text="${h.numHabitacion}"></td>
+						<td th:text="${h.tipoHabitacion}"></td>
+						<td th:text="${h.piso}"></td>
+						<td th:text="${h.precioxDia}"></td>
+						<td th:text="${h.estadoHabitacion}"></td>
+						<td th:text="${h.estadoReserva}"></td>
+						<td th:text="${h.cliente}"></td>
+						<td th:text="${#dates.format(h.fechaEntrada, 'dd/MM/yyyy')}"></td>
+						<td th:text="${#dates.format(h.fechaSalida, 'dd/MM/yyyy')}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

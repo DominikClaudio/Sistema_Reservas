@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Selección</title>
+  <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+  <link rel="stylesheet" th:href="@{/css/cliente.css}">
+</head>
+<body>
+
+<nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
+
+<div class="cliente-contenido">
+  <div class="general-contenido">
+    <div class="container mt-4">
+      <h2>Mi Selección de Habitaciones</h2>
+
+      <div th:if="${seleccion == null or #lists.isEmpty(seleccion)}">
+        <p>No tienes habitaciones seleccionadas.</p>
+      </div>
+
+      <div th:if="${seleccion != null and !#lists.isEmpty(seleccion)}">
+        <table>
+          <thead>
+          <tr>
+            <th>Número</th>
+            <th>Imagen</th>
+            <th>Fecha Entrada</th>
+            <th>Fecha Salida</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="item, iterStat : ${seleccion}">
+            <td th:text="${item.numhabitacion}">101</td>
+            <td>
+              <img th:src="@{${item.imagenurl}}" alt="Imagen" width="100">
+            </td>
+            <td th:text="${item.fechaInicio}">2025-06-20</td>
+            <td th:text="${item.fechaFin}">2025-06-22</td>
+            <td>
+              <form th:action="@{/cliente/eliminar-seleccion}" method="post">
+                <input type="hidden" name="indice" th:value="${iterStat.index}">
+                <button type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <form th:action="@{/cliente/confirmar-seleccion}" method="post">
+          <button type="submit" class="btn-reservar">Confirmar Reserva</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

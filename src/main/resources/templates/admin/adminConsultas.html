@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Panel Administrador</title>
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+	<nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+	<div class="admin-contenido">
+		<div class="general-container">
+			<form th:action="@{/admin/consulta}" method="get" class="form-filtro">
+				<div class="primer-container">
+					<div class="sub-primer-container">
+						<div class="campo">
+							<label>Buscar Reserva</label>
+							<input type="text" name="codigoReserva" placeholder="Ingrese código" required />
+						</div>
+						<div class="campo">
+							<button type="submit" class="btn">Buscar</button>
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Cod Reserva</th>
+						<th>Cliente</th>
+						<th>Habitación</th>
+						<th>Tipo</th>
+						<th>Piso</th>
+						<th>Fecha Entrada</th>
+						<th>Fecha Salida</th>
+						<th>PrecioxDia</th>
+						<th>Días</th>
+						<th>Total</th>
+						<th>Acción</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="h : ${habitaciones}">
+						<td th:text="${h.numHabitacion}"></td>
+						<td th:text="${h.tipoHabitacion}"></td>
+						<td th:text="${h.piso}"></td>
+						<td th:text="${h.precioxDia}"></td>
+						<td th:text="${h.estadoHabitacion}"></td>
+						<td th:text="${h.estadoReserva}"></td>
+						<td th:text="${h.cliente}"></td>
+						<td th:text="${#dates.format(h.fechaEntrada, 'dd/MM/yyyy')}"></td>
+						<td th:text="${#dates.format(h.fechaSalida, 'dd/MM/yyyy')}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

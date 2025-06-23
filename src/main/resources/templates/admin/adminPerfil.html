@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Panel Administrador</title>
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/admin.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+	<nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+	<div class="perfil-container">
+		<div class="perfil-card">
+			<div class="perfil-header">
+				<div class="avatar">
+					<img src="/Imagenes/perfil.png" alt="Perfil" />
+				</div>
+				<h2>Mi Perfil</h2>
+			</div>
+
+			<div class="perfil-datos">
+				<div class="dato">
+					<label>Nombre:</label> <span th:text="${perfil.nombre}"></span>
+				</div>
+				<div class="dato">
+					<label>Apellido:</label> <span th:text="${perfil.apellido}"></span>
+				</div>
+				<div class="dato">
+					<label>Correo:</label> <span th:text="${perfil.correo}"></span>
+				</div>
+				<div class="dato">
+					<label>Contraseña:</label> <span>**********</span>
+				</div>
+				<div class="dato-boton">
+					<a th:href="@{/admin/perfil/editarPerfil}" class="btn-icon"
+						title="Editar"> <i class="fas fa-pen"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Registro</title>
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/mainStyle.css}">
+<link rel="stylesheet" th:href="@{/css/login.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+	<nav th:replace="fragments/navPrincipal :: navbar"></nav>
+
+	<div class="login-page">
+		<div class="login-container">
+			<form class="login-box" method="post" th:action="@{/login/registroUsuario}">
+				<h2>Crear Cuenta</h2>
+
+				<div class="input-group">
+					<label for="nombre">Nombre*</label> <input type="text" id="nombre"
+						name="nombre" required>
+				</div>
+				
+				<div class="input-group">
+					<label for="apellido">Apellido*</label> <input type="text" id="apellido"
+						name="apellido" required>
+				</div>
+				
+				<div class="input-group">
+					<label for="dni">DNI</label> <input type="text" id="dni"
+						name="dni" required>
+				</div>
+
+				<div class="input-group">
+					<label for="correo">Correo electrónico*</label> <input type="email"
+						id="correo" name="correo" required>
+				</div>
+
+				<div class="input-group password-container">
+                    <label for="contrasena">Contraseña*</label>
+                    <input type="password" id="contrasena" name="password" required>
+                    <span class="toggle-password" onclick="togglePassword('contrasena')">
+                        <i class="fa fa-eye" id="toggleIconContrasena"></i>
+                    </span>
+                </div>
+
+				<button type="submit" class="btn">Registrarse</button>
+
+				<p class="enlace-registro">
+					¿Ya tienes cuenta? <a th:href="@{/login}">Iniciar Sesión</a>
+				</p>
+			</form>
+		</div>
+	</div>
+	<script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById('toggleIcon' + inputId.charAt(0).toUpperCase() + inputId.slice(1));
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>

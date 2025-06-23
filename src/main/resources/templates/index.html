@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Inicio - Hospedaje</title>
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/mainStyle.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+</head>
+<body>
+	<nav th:replace="~{fragments/navPrincipal :: navbar}"></nav>
+
+	<div class="contenedor">
+		<div class="general-contenido">
+			<div class="container text-center mt-5">
+				<h2 class="mb-4">
+					<strong>Conoce nuestras habitaciones</strong>
+				</h2>
+				<p>Reserva tu habitación ideal con solo unos clics.</p>
+				<div class="swiper mySwiper">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<div class="image-container">
+								<img th:src="@{../imagenes/estandar.png}" alt="Estándar">
+								<div class="caption">Estándar</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="image-container">
+								<img th:src="@{/imagenes/doble.png}" alt="Doble">
+								<div class="caption">Doble</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="image-container">
+								<img th:src="@{../imagenes/ejecutiva.png}" alt="Ejecutiva">
+								<div class="caption">Ejecutiva</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="image-container">
+								<img th:src="@{/imagenes/panoramica.png}" alt="Panorámica">
+								<div class="caption">Panorámica</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="image-container">
+								<img th:src="@{/imagenes/suite.png}" alt="Suite">
+								<div class="caption">Suite</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="image-container">
+								<img th:src="@{/imagenes/suite_panoramica.png}"
+									alt="Suite Panorámica">
+								<div class="caption">Suite Panorámica</div>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-button-prev"></div>
+					<div class="swiper-button-next"></div>
+				</div>
+
+				<div class="redes-sociales">
+					<a href="https://facebook.com" target="_blank"><i
+						class="fab fa-facebook"></i></a> <a href="https://instagram.com"
+						target="_blank"><i class="fab fa-instagram"></i></a> <a
+						href="https://wa.me/tuNumero" target="_blank"><i
+						class="fab fa-whatsapp"></i></a> <a
+						href="mailto:contacto@tuhospedaje.com"><i
+						class="fas fa-envelope"></i></a>
+				</div>
+				
+				<div class="btn-ambar">
+					<a class="btn" th:href="@{/habitaciones}">Ver Habitaciones</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<script>
+		var swiper = new Swiper(".mySwiper", {
+			effect : "coverflow",
+			grabCursor : true,
+			centeredSlides : true,
+			slidesPerView : 3,
+			coverflowEffect : {
+				rotate : 20,
+				stretch : 0,
+				depth : 300,
+				modifier : 1,
+				slideShadows : true,
+			},
+			pagination : {
+				el : ".swiper-pagination",
+				clickable : true,
+			},
+			navigation : {
+				nextEl : ".swiper-button-next",
+				prevEl : ".swiper-button-prev",
+			},
+			loop : true,
+			autoplay : {
+				delay : 3000,
+				disableOnInteraction : false,
+			},
+		});
+	</script>
+</body>
+</html>
+

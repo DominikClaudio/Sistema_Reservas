@@ -1,0 +1,277 @@
+/* Contenedor principal */
+.admin-contenido{
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-top: 40px; 
+}
+
+.general-container {
+    max-width: 70%;
+    height: 80vh;
+    margin:auto;
+    padding: 20px;
+    color:black;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+/* Formulario de filtro */
+.form-filtro {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.form-filtro .campo {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-filtro label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.form-filtro select,
+.form-filtro input[type="text"],
+.form-filtro input[type="date"] {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.form-filtro .btn {
+    align-self: center;
+    padding: 10px 30px;
+    margin-top:25px;
+    background-color: #ffd700;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.form-filtro .btn:hover {
+    background-color: #e5c100;
+}
+
+/* Tabla de resultados */
+table {
+    width: 100%;
+    height: 90%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #444;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+tbody {
+    display: block;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+tbody::-webkit-scrollbar {
+    width: 8px;
+}
+
+tbody::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 4px;
+}
+
+/*-------------
+  VISTA PERFIL
+-------------*/
+
+.perfil-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 92.2%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.perfil-card {
+    width: 100%;
+    max-width: 400px;
+    height:550px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    transition: 0.3s;
+}
+
+.perfil-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.perfil-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid #ffd700;
+}
+
+.perfil-header h2 {
+    font-size: 26px;
+    color: #222;
+    margin: 0;
+}
+
+.perfil-datos {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.dato {
+    display: flex;
+    justify-content: space-between;
+    font-size: 17px;
+    color: #444;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.dato label {
+	margin-left: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.dato span {
+	margin-right: 20px;
+    color: #555;
+    font-weight: 500;
+}
+
+.dato-boton{
+	margin-top: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background-color: #ffd700;
+    color: #666;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #ccc;
+}
+
+.btn-icon:hover {
+    background-color: #e5c100;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/*---------------
+  EDITAR PERFIL
+  --------------*/
+  
+  .perfil-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.campo-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+.botones-form {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-guardar,
+.btn-cancelar {
+    padding: 10px 20px;
+    border: none;
+    font-size: 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-guardar {
+    background-color: #28a745;
+}
+
+.btn-cancelar {
+    background-color: #dc3545;
+}
+
+.btn-guardar:hover {
+    background-color: #218838;
+}
+
+.btn-cancelar:hover {
+    background-color: #c82333;
+}
+  

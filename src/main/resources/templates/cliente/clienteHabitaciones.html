@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Conoce nuestras habitaciones</title>
+
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/cliente.css}">
+	<link rel="stylesheet" th:href="@{/css/clienteHab.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+	<style>
+
+	</style>
+</head>
+<body>
+
+	<nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
+
+
+	<div class="cliente-contenido">
+		<div class="general-contenido">
+			<div class="container text-center mt-5">
+				<div class="carousel-contenedor">
+
+					<div id="filtrosContainer" th:if="${pisos != null}">
+
+						<form th:action="@{/cliente/filtrar-habitaciones}" method="post" class="busqueda-box">
+							<input type="hidden" name="tipohabId" th:value="${tipohabId}" />
+
+							<div class="campo">
+								<label>Fecha Entrada:</label>
+								<input type="date" name="fechaEntrada" th:value="${fechaEntrada}" required>
+							</div>
+
+							<div class="campo">
+								<label>Fecha Salida:</label>
+								<input type="date" name="fechaSalida" th:value="${fechaSalida}" required>
+							</div>
+
+							<div class="campo">
+								<label>Piso Disponible:</label>
+								<select name="pisoId" required>
+									<option value="" disabled selected>Seleccione un piso</option>
+									<option th:each="piso : ${pisos}"
+											th:value="${piso.idpiso}"
+											th:selected="${piso.idpiso == pisoSeleccionado}"
+											th:text="${piso.nombre}">
+									</option>
+								</select>
+
+							</div>
+
+							<div class="campo">
+								<label for="adultos">Adultos:</label>
+								<input type="number" id="adultos" name="adultos" min="1" max="10" value="2" th:value="${adultos}" required />
+							</div>
+
+							<div class="campo">
+								<label for="ninos">Niños:</label>
+								<input type="number" id="ninos" name="ninos" min="0" max="10" value="0" th:value="${ninos}" />
+							</div>
+
+
+							<div class="campo boton">
+								<button type="submit" class="btn-reserva">Ver Habitaciones Disponibles</button>
+							</div>
+						</form>
+
+						<!-- Modal de capacidad excedida -->
+						<div class="modal" id="modalCapacidad" tabindex="-1" style="display: none;">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content" style="border-radius: 10px;">
+									<div class="modal-header" style="background-color: #ffc107;">
+										<h5 class="modal-title">Capacidad excedida</h5>
+										<button type="button" class="close" onclick="cerrarModal()" style="border: none; background: transparent; font-size: 1.5rem;">&times;</button>
+									</div>
+									<div class="modal-body">
+										<p>⚠️ Las habitaciones del tipo seleccionado tienen una capacidad máxima de 2 personas.</p>
+										<p>Por favor, reduzca la cantidad de personas o seleccione otro tipo de habitación.</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cerrar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div th:if="${habitaciones != null}">
+							<h2 style="margin-top: 40px;">Habitaciones Disponibles</h2>
+
+							<div class="habitaciones-grid">
+								<div class="habitacion-card" th:each="hab : ${habitaciones}">
+									<!-- Fondo con imagen -->
+									<div class="habitacion-imagen" th:style="'background-image: url(' + @{${hab.imagenurl}} + ')'">
+										<div class="habitacion-overlay">
+											<p class="habitacion-numero">Hab. N° <span th:text="${hab.numhabitacion}">101</span></p>
+										</div>
+									</div>
+
+									<!-- Botón de reservar -->
+									<form th:action="@{/cliente/confirmar-reserva}" method="post" class="form-reservar">
+										<input type="hidden" name="habitacionId" th:value="${hab.idhabitacion}" />
+										<input type="hidden" name="fechaInicio" th:value="${fechaInicio}" />
+										<input type="hidden" name="fechaSalida" th:value="${fechaSalida}" />
+										<input type="hidden" name="tipohabId" th:value="${tipohabId}" />
+										<input type="hidden" name="pisoId" th:value="${pisoSeleccionado}" />
+										<input type="hidden" name="capacidad" th:value="${capacidadPersonas}">
+										<button type="submit" class="btn-reservar">Reservar</button>
+										<button type="submit" name="accion" value="seleccionar" class="btn-seleccion">Añadir a Mi Selección</button>
+									</form>
+								</div>
+								<div th:if="${#lists.isEmpty(habitaciones)}">
+									<p style="color:red; font-weight: bold;">No hay habitaciones disponibles con la capacidad indicada.</p>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+
+
+					<div id="tiposContainer" th:if="${pisos == null}">
+						<div class="swiper mySwiper">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" th:each="hab : ${tipos}">
+									<form th:action="@{/cliente/seleccionar-fechas}" method="post">
+										<input type="hidden" name="tipohabId" th:value="${hab.idtipohab}" />
+
+										<div class="card-container">
+											<div class="card-inner">
+												<!-- Front -->
+												<div class="card-front">
+													<div class="image-container">
+														<button type="button" class="flip-icon" title="Ver detalles">
+															<i class="fas fa-rotate"></i>
+														</button>
+														<img th:src="@{${hab.imagenUrl}}" th:alt="${hab.nombre}" />
+														<div class="caption" th:text="${hab.nombre}">Tipo</div>
+													</div>
+												</div>
+
+												<!-- Back -->
+												<div class="card-back">
+													<button type="button" class="flip-back-icon" title="Volver">
+														<i class="fas fa-rotate-left"></i>
+													</button>
+													<div class="back-content">
+														<p><strong>Precio:</strong> S/. <span th:text="${hab.precioxDia}">0.00</span></p>
+														<p th:text="${hab.descripcionHab}"></p>
+													</div>
+												</div>
+											</div>
+
+											<div class="btn-container">
+												<button type="submit" class="btn-reservar">Lo Quiero...</button>
+											</div>
+										</div>
+									</form>
+
+								</div>
+							</div>
+							<!-- Botones opcionales -->
+							<div class="swiper-button-prev"></div>
+							<div class="swiper-button-next"></div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+	<script>
+		window.onload = function () {
+			new Swiper(".mySwiper", {
+				effect: "coverflow",
+				grabCursor: true,
+				centeredSlides: true,
+				slidesPerView: 3,
+				loop: true,
+				coverflowEffect: {
+					rotate: 0,
+					stretch: 0,
+					depth: 100,
+					modifier: 1.5,
+					slideShadows: false,
+				},
+				slideToClickedSlide: true,
+				navigation: {
+					nextEl: ".swiper-button-next",
+					prevEl: ".swiper-button-prev",
+				},
+				on: {
+					slideChangeTransitionStart: function () {
+						document.querySelectorAll('.card-inner.flipped').forEach(card => {
+							card.classList.remove('flipped');
+						});
+					}
+				}
+			});
+		};
+		document.querySelectorAll('.flip-icon').forEach(btn => {
+			btn.addEventListener('click', function (e) {
+				e.stopPropagation(); // Para evitar efectos colaterales
+				const cardInner = this.closest('.card-container').querySelector('.card-inner');
+				cardInner.classList.toggle('flipped');
+			});
+		});
+
+		document.querySelectorAll('.flip-back-icon').forEach(btn => {
+			btn.addEventListener('click', function (e) {
+				e.stopPropagation();
+				const cardInner = this.closest('.card-container').querySelector('.card-inner');
+				cardInner.classList.remove('flipped');
+			});
+		});
+
+		function mostrarModal() {
+			document.getElementById("modalCapacidad").style.display = "block";
+		}
+
+		function cerrarModal() {
+			document.getElementById("modalCapacidad").style.display = "none";
+		}
+
+	</script>
+	<script th:if="${capacidadExcedida}">
+		mostrarModal();
+	</script>
+
+
+
+</body>
+</html>

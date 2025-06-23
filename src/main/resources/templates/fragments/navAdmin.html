@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/mainStyle.css}">
+<body>
+	<nav class="navbar-admin navbar" th:fragment="navbarAdmin">
+		<div class="navbar-seccion izquierda">
+			<div class="logo">Hospedaje</div>
+		</div>
+
+		<div class="navbar-seccion centro">
+			<ul class="nav-links">
+				<li><a th:href="@{/admin/inicio}"
+					th:classappend="${currentPath.startsWith('/admin/inicio') ? 'activo' : ''}">Inicio</a></li>
+				<li><a th:href="@{/admin/consultas}"
+					th:classappend="${currentPath.startsWith('/admin/consultas') ? 'activo' : ''}">Consultas</a></li>
+				<li><a th:href="@{/admin/usuarios}"
+					th:classappend="${currentPath.startsWith('/admin/usuarios') ? 'activo' : ''}">Usuarios</a></li>
+				<li><a th:href="@{/admin/mantenimientos}"
+					th:classappend="${currentPath.startsWith('/admin/mantenimientos') ? 'activo' : ''}">Mantenimientos</a></li>
+				<li><a th:href="@{/admin/reportes}"
+					th:classappend="${currentPath.startsWith('/admin/reportes') ? 'activo' : ''}">Reportes</a></li>
+				<li><a th:href="@{/admin/perfil}"
+					th:classappend="${currentPath.startsWith('/admin/perfil') ? 'activo' : ''}">Perfil</a></li>
+			</ul>
+		</div>
+
+		<div class="navbar-seccion derecha">
+			<form th:action="@{/logout}" method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+				<button type="submit" class="btn-login">Cerrar Sesión</button>
+			</form>
+		</div>
+	</nav>
+</body>
+</html>

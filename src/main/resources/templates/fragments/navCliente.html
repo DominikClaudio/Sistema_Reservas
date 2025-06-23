@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/mainStyle.css}">
+<body>
+	<nav class="navbar-cliente navbar" th:fragment="navbarCliente">
+		<div class="navbar-seccion izquierda">
+			<div class="logo">Hospedaje</div>
+		</div>
+		
+		<div class="navbar-seccion centro">
+			<ul class="nav-links">
+				<li><a th:href="@{/cliente/inicio}"
+					th:classappend="${currentPath.startsWith('/cliente/inicio') ? 'activo' : ''}">Inicio</a></li>
+				<li><a th:href="@{/cliente/habitaciones}"
+					th:classappend="${currentPath.startsWith('/cliente/habitaciones') ? 'activo' : ''}">Habitaciones</a></li>
+				<li><a th:href="@{/cliente/mis-reservas}"
+					th:classappend="${currentPath.startsWith('/cliente/mis-reservas') ? 'activo' : ''}">Mis
+						Reservas</a></li>
+				<li><a th:href="@{/cliente/mi-seleccion}"
+					th:classappend="${currentPath.startsWith('/cliente/mi-seleccion') ? 'activo' : ''}">Mi
+						Selección</a></li>
+				<li><a th:href="@{/cliente/perfil}"
+					th:classappend="${currentPath.startsWith('/cliente/perfil') ? 'activo' : ''}">Perfil</a></li>
+			</ul>
+		</div>
+		
+		<div class="navbar-seccion derecha">
+			<form th:action="@{/logout}" method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+				<button type="submit" class="btn-login">Cerrar Sesión</button>
+			</form>
+		</div>
+	</nav>
+</body>
+</html>

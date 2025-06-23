@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Conoce nuestras habitaciones</title>
+
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/cliente.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+</head>
+<body>
+
+	<nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
+
+	<div class="cliente-contenido">
+		<div class="general-contenido">
+			<div class="container text-center mt-5">
+				<h2 class="mb-4">
+					<strong>Conoce nuestras habitaciones</strong>
+				</h2>
+				<p>Reserva tu habitación ideal con solo unos clics.</p>
+				<div class="swiper mySwiper">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" th:each="hab : ${tipos}">
+							<div class="image-container">
+								<img th:src="@{${hab.imagenUrl}}" th:alt="${hab.nombre}">
+								<div class="caption" th:text="${hab.nombre}"></div>
+							</div>
+						</div>
+					</div>
+					<div class="swiper-button-prev"></div>
+					<div class="swiper-button-next"></div>
+				</div>
+
+				<div class="redes-sociales">
+					<a href="https://facebook.com" target="_blank"><i
+						class="fab fa-facebook"></i></a> <a href="https://instagram.com"
+						target="_blank"><i class="fab fa-instagram"></i></a> <a
+						href="https://wa.me/tuNumero" target="_blank"><i
+						class="fab fa-whatsapp"></i></a> <a
+						href="mailto:contacto@tuhospedaje.com"><i
+						class="fas fa-envelope"></i></a>
+				</div>
+
+				<div class="btn-ambar">
+					<a class="btn" th:href="@{/habitaciones}">Ver Habitaciones</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<script>
+		var swiper = new Swiper(".mySwiper", {
+			effect : "coverflow",
+			grabCursor : true,
+			centeredSlides : true,
+			slidesPerView : 3,
+			coverflowEffect : {
+				rotate : 20,
+				stretch : 0,
+				depth : 300,
+				modifier : 1,
+				slideShadows : true,
+			},
+			pagination : {
+				el : ".swiper-pagination",
+				clickable : true,
+			},
+			navigation : {
+				nextEl : ".swiper-button-next",
+				prevEl : ".swiper-button-prev",
+			},
+			loop : true,
+			autoplay : {
+				delay : 3000,
+				disableOnInteraction : false,
+			},
+		});
+	</script>
+
+</body>
+</html>

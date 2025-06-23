@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Habitaciones</title>
+<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+<link rel="stylesheet" th:href="@{/css/mainStyle.css}">
+</head>
+<body>
+
+	<nav th:replace="~{fragments/navPrincipal :: navbar}"></nav>
+
+	<div class="primer-container">
+		<div class="reserva-box">
+			<div class="row">
+
+				<div class="col-md-4">
+					<div class="card">
+						<img th:src="@{/imagenes/estandar.png}" class="card-img-top"
+							alt="Habitación Estándar">
+						<div class="card-body">
+							<h5 class="card-title">Habitación Estándar</h5>
+							<a th:href="@{/login}" class="btn btn-primary">Reservar</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="card">
+						<img th:src="@{/imagenes/doble.png}" class="card-img-top"
+							alt="Habitación Doble">
+						<div class="card-body">
+							<h5 class="card-title">Habitación Doble</h5>
+							<a th:href="@{/login}" class="btn btn-primary">Reservar</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="card">
+						<img th:src="@{/imagenes/ejecutiva.png}" class="card-img-top"
+							alt="Habitación Ejecutiva">
+						<div class="card-body">
+							<h5 class="card-title">Habitación Ejecutiva</h5>
+							<a th:href="@{/login}" class="btn btn-primary">Reservar</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="card">
+						<img th:src="@{/imagenes/panoramica.png}" class="card-img-top"
+							alt="Habitación Panorámica">
+						<div class="card-body">
+							<h5 class="card-title">Habitación Panorámica</h5>
+							<a th:href="@{/login}" class="btn btn-primary">Reservar</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="card">
+						<img th:src="@{/imagenes/suite_panoramica.png}"
+							class="card-img-top" alt="Habitación Suite Panorámica">
+						<div class="card-body">
+							<h5 class="card-title">Habitación Suite Panorámica</h5>
+							<a th:href="@{/login}" class="btn btn-primary">Reservar</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="card">
+						<img th:src="@{/imagenes/suite.png}" class="card-img-top"
+							alt="Habitación Suite">
+						<div class="card-body">
+							<h5 class="card-title">Habitación Suite</h5>
+							<a th:href="@{/login}" class="btn btn-primary">Reservar</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
