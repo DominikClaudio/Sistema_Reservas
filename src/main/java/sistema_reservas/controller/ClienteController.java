@@ -131,7 +131,7 @@ public class ClienteController {
     @GetMapping("/cliente/mis-reservas")
     public String misReservas(HttpServletRequest request, Model model) {
         model.addAttribute("currentPath", request.getRequestURI());
-        return "cliente/cclienteMisReservas"; // aún por crear
+        return "cliente/clienteMisReservas"; // aún por crear
     }
 
     @GetMapping("/cliente/perfil")
