@@ -316,3 +316,20 @@ DELIMITER ;
 CALL SP_ListarHabitacionesDisponibles("2025-06-21", "2025-06-22", 1, 1, 2);
 
 */
+DELIMITER //
+
+CREATE PROCEDURE SP_ListarPisosPorTipo(
+IN tipoHabId INT
+)
+BEGIN
+    SELECT DISTINCT
+        P.idpiso,
+        P.nombre
+    FROM
+        Habitaciones H
+    INNER JOIN Pisos P ON H.pisoid = P.idpiso
+    WHERE
+        H.tipohabid = tipoHabId;
+END //
+
+DELIMITER ;

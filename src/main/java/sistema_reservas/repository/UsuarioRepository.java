@@ -8,6 +8,7 @@ import sistema_reservas.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
 	
 	Optional<Usuario> findByCorreo(String correo);
+	//Optional<Usuario> findById(String correo);
 	
 
 }
