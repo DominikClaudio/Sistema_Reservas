@@ -2,25 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Perfil</title>
+  <title>Mi Perfil</title>
   <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
   <link rel="stylesheet" th:href="@{/css/cliente.css}">
 </head>
 <body>
-
-<nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
-
-<div class="cliente-contenido">
-  <div class="general-contenido">
-    <div class="container mt-4">
-      <h2>		clientePerfil.html</h2>
-
-	  clientePerfil.html
-
+  <nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
+  <div class="cliente-contenido">
+    <div class="general-contenido">
+      <div class="container mt-4 perfil-card">
+        <h2>Mi Perfil</h2>
+        <div class="dato"><label>Nombre:</label> <span th:text="${perfil.nombre}"></span></div>
+        <div class="dato"><label>Apellido:</label> <span th:text="${perfil.apellido}"></span></div>
+        <div class="dato"><label>Correo:</label> <span th:text="${perfil.correo}"></span></div>
+		<br/>
+		<br/>
+		<br/>
+        <!-- div class="dato-boton">
+          <a th:href="@{/cliente/perfil/editar}" class="btn">Editar Perfil</a>
+        </div -->
       </div>
     </div>
   </div>
-</div>
-
 </body>
 </html>

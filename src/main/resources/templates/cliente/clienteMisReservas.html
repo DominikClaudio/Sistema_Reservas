@@ -7,20 +7,36 @@
   <link rel="stylesheet" th:href="@{/css/cliente.css}">
 </head>
 <body>
-
-<nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
-
-<div class="cliente-contenido">
-  <div class="general-contenido">
-    <div class="container mt-4">
-      <h2>		clienteMisReservas.html</h2>
-
-	  clienteMisReservas.html
-
+  <nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
+  <div class="cliente-contenido">
+    <div class="general-contenido">
+      <div class="container mt-4">
+        <h2>Mis Reservas</h2>
+        <div th:if="${reservas == null or #lists.isEmpty(reservas)}">
+          <p>No tienes reservas activas.</p>
+        </div>
+        <div th:if="${reservas != null and !#lists.isEmpty(reservas)}">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="r : ${reservas}">
+                <td th:text="${r.codigoreserva}">ABC123</td>
+                <td th:text="${r.fechaentrada}">2025-07-01</td>
+                <td th:text="${r.fechasalida}">2025-07-02</td>
+                <td th:text="${r.estadoid}">1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 </body>
 </html>

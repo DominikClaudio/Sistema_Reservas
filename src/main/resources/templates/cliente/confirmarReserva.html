@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confirmar Reserva</title>
+</head>
+<body>
+  <!-- Fragmento de navegación -->
+  <div th:replace="fragments/navCliente :: nav"></div>
+
+  <h1>Confirmar Reserva</h1>
+
+  <p><strong>Usuario:</strong> <span th:text="${perfil.nombre}">Nombre</span></p>
+  <p><strong>Tipo Habitación ID:</strong> <span th:text="${tipohabId}">1</span></p>
+  <p><strong>Entrada:</strong> <span th:text="${fechaEntrada}">2025-07-01</span></p>
+  <p><strong>Salida:</strong> <span th:text="${fechaSalida}">2025-07-02</span></p>
+  <p><strong>Piso:</strong> <span th:text="${pisoId}">2</span></p>
+  <p><strong>Adultos:</strong> <span th:text="${adultos}">2</span></p>
+  <p><strong>Niños:</strong> <span th:text="${ninos}">0</span></p>
+
+  <!-- Botón para confirmar -->
+  <form th:action="@{/cliente/guardar-reserva}" method="post">
+    <input type="hidden" th:name="tipohabId" th:value="${tipohabId}" />
+    <input type="hidden" th:name="fechaEntrada" th:value="${fechaEntrada}" />
+    <input type="hidden" th:name="fechaSalida" th:value="${fechaSalida}" />
+    <input type="hidden" th:name="pisoId" th:value="${pisoId}" />
+    <input type="hidden" th:name="adultos" th:value="${adultos}" />
+    <input type="hidden" th:name="ninos" th:value="${ninos}" />
+    <button type="submit">Confirmar Reserva</button>
+  </form>
+</body>
+</html>

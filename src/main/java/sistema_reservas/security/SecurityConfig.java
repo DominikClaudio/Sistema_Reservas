@@ -24,12 +24,12 @@ public class SecurityConfig {
 	@Autowired
     private UserDetailsService userDetailsService;
 	@Autowired
-	private ManejadorLogin successHandler;
-	
+	private ManejadorLogin successHandler; 
+		   
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		http
-		.authorizeHttpRequests(auth -> auth
+		.authorizeHttpRequests(auth -> auth 
 		        .requestMatchers(
 		                "/css/**",
 		                "/imagenes/**",
