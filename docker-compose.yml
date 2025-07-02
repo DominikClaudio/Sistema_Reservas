@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: proyectdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      #- ./data/mysql:/var/lib/mysql# esto es si lo quisiera en una carpeta
+
+
+  backend:
+    build: ./Sistema_Reservas
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/proyectdb
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
+    ports:
+      - "8081:8081"
+  notification:
+    build:
+      context: ./Microservicio_Notificaciones_SpringBoot
+      dockerfile: Dockerfile
+    container_name: Microservicio_Notificaciones_SpringBoot
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend_angular
+      dockerfile: Dockerfile
+    container_name: angular-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"     # Puerto para conexión de apps (AMQP)
+      - "15672:15672"   # Puerto para el panel web
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      
+volumes:
+  db_data:
