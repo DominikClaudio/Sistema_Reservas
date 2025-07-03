@@ -11,7 +11,7 @@
 
 	<div class="admin-contenido">
 		<div class="general-container">
-			<form th:action="@{/admin/consulta}" method="get" class="form-filtro">
+			<form th:action="@{/admin/consultas}" method="post" class="form-filtro">
 				<div class="primer-container">
 					<div class="sub-primer-container">
 						<div class="campo">
@@ -25,36 +25,49 @@
 				</div>
 			</form>
 
-			<table>
-				<thead>
-					<tr>
-						<th>Cod Reserva</th>
-						<th>Cliente</th>
-						<th>Habitación</th>
-						<th>Tipo</th>
-						<th>Piso</th>
-						<th>Fecha Entrada</th>
-						<th>Fecha Salida</th>
-						<th>PrecioxDia</th>
-						<th>Días</th>
-						<th>Total</th>
-						<th>Acción</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="h : ${habitaciones}">
-						<td th:text="${h.numHabitacion}"></td>
-						<td th:text="${h.tipoHabitacion}"></td>
-						<td th:text="${h.piso}"></td>
-						<td th:text="${h.precioxDia}"></td>
-						<td th:text="${h.estadoHabitacion}"></td>
-						<td th:text="${h.estadoReserva}"></td>
-						<td th:text="${h.cliente}"></td>
-						<td th:text="${#dates.format(h.fechaEntrada, 'dd/MM/yyyy')}"></td>
-						<td th:text="${#dates.format(h.fechaSalida, 'dd/MM/yyyy')}"></td>
-					</tr>
-				</tbody>
-			</table>
+				<table>
+					<thead>
+						<tr>
+							<th>Cod Reserva</th>
+							<th>Cliente</th>
+							<th>Habitación</th>
+							<th>Tipo</th>
+							<th>Piso</th>
+							<th>Fecha Entrada</th>
+							<th>Fecha Salida</th>
+							<th>PrecioxDia</th>
+							<th>Días</th>
+							<th>Total</th>
+							<th>Acción</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="r : ${resultados}">
+							<td th:text="${r.codigoReserva}"></td>
+							<td th:text="${r.cliente}"></td>
+							<td th:text="${r.numHabitacion}"></td>
+							<td th:text="${r.tipoHabitacion}"></td>
+							<td th:text="${r.piso}"></td>
+							<td th:text="${r.fechaEntrada}">></td>
+							<td th:text="${r.fechaSalida}"></td>
+							<td th:text="${r.precioxDia}"></td>
+							<td th:text="${r.cantidadDias}"></td>
+							<td th:text="${r.total}"></td>
+							<td>
+								<form th:action="@{/admin/confirmar-reserva}" method="post" th:if="${r.estadoReserva == 'Pendiente'}">
+									<input type="hidden" name="reservaId" th:value="${r.idReserva}" />
+									<button type="submit" class="btn-confirmar">Confirmar</button>
+								</form>
+
+								<form th:action="@{/admin/finalizar-reserva}" method="post" th:if="${r.estadoReserva == 'Confirmado'}">
+									<input type="hidden" name="reservaId" th:value="${r.idReserva}" />
+									<button type="submit" class="btn-finalizar">Finalizar</button>
+								</form>
+							</td>
+
+						</tr>
+					</tbody>
+				</table>
 		</div>
 	</div>
 

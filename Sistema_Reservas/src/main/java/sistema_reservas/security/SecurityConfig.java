@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,12 +25,14 @@ public class SecurityConfig {
 	@Autowired
     private UserDetailsService userDetailsService;
 	@Autowired
-	private ManejadorLogin successHandler; 
-		   
+	private ManejadorLogin successHandler;
+
+
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		http
-		.authorizeHttpRequests(auth -> auth 
+		.authorizeHttpRequests(auth -> auth
 		        .requestMatchers(
 		                "/css/**",
 		                "/imagenes/**",
@@ -37,11 +40,13 @@ public class SecurityConfig {
 		                "/login/**", 
 		                "/login/registroUsuario",
 		                "/habitaciones",       
-		                "/habitaciones/**"     
-		        ).permitAll()
+		                "/habitaciones/**",
+						"/api/clima/**"
+				).permitAll()
 		        .requestMatchers("/admin/**").hasRole("ADMIN")
 		        .requestMatchers("/cliente/**").hasRole("CLIENTE")
-		        .anyRequest().authenticated()
+				.requestMatchers("/api/clima/**").permitAll()
+				.anyRequest().authenticated()
 				)
 		.formLogin(form -> form
 				.loginPage("/login")

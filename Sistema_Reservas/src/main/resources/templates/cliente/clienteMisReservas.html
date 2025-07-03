@@ -1,42 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Mis Reservas</title>
-  <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
-  <link rel="stylesheet" th:href="@{/css/cliente.css}">
+    <title>Mis Reservas</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/cliente.css}">
 </head>
 <body>
-  <nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
-  <div class="cliente-contenido">
-    <div class="general-contenido">
-      <div class="container mt-4">
-        <h2>Mis Reservas</h2>
-        <div th:if="${reservas == null or #lists.isEmpty(reservas)}">
-          <p>No tienes reservas activas.</p>
+    <nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
+
+    <div class="cliente-contenido">
+        <div class="general-contenido">
+            <div class="container mt-4">
+                <h2>Mis Reservas</h2>
+
+                <div th:if="${reservas.size() == 0}">
+                    <p>No tienes reservas registradas aún.</p>
+                </div>
+
+                <table th:if="${reservas.size() > 0}" class="tabla-reservas">
+                    <thead>
+                    <tr>
+                        <th>N° Habitación</th>
+                        <th>Tipo</th>
+                        <th>Fecha Entrada</th>
+                        <th>Días</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${reservas}">
+                        <td th:text="${r.numhabitacion}"></td>
+                        <td th:text="${r.tipoHabitacion}"></td>
+                        <td th:text="${r.fechaentrada}"></td>
+                        <td th:text="${r.cantidaddias}"></td>
+                        <td th:text="${r.estadoReserva}"></td>
+                        <td>
+                            <!-- Botón Cancelar solo si estado es Pendiente -->
+                            <form th:action="@{/cliente/cancelar-reserva}" method="post" th:if="${r.estadoReserva == 'Pendiente'}">
+                                <input type="hidden" name="reservaId" th:value="${r.idreserva}" />
+                                <input type="hidden" name="habitacionId" th:value="${r.idHabitacion}" />
+                                <button type="submit" class="btn-cancelarRe">Cancelar</button>
+                            </form>
+
+                            <!-- Botón Ver Detalles (a futuro puedes mostrar un modal o redirigir) -->
+                            <button type="button"
+                                    class="btn-reporte btn-detalles"
+                                    th:onclick="'mostrarDetalles(' + ${r.idreserva} + ')'">
+                                Ver Detalles
+                            </button>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div id="modalDetalles" class="modal-detalles">
+                    <div class="modal-content">
+                        <span class="close-modal" onclick="cerrarModal()">&times;</span>
+                        <h3>Detalle de la Reserva</h3>
+                        <div id="contenidoModal">
+                            <p>Cargando...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div th:if="${reservas != null and !#lists.isEmpty(reservas)}">
-          <table>
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Entrada</th>
-                <th>Salida</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="r : ${reservas}">
-                <td th:text="${r.codigoreserva}">ABC123</td>
-                <td th:text="${r.fechaentrada}">2025-07-01</td>
-                <td th:text="${r.fechasalida}">2025-07-02</td>
-                <td th:text="${r.estadoid}">1</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
-  </div>
+    <script>
+        function mostrarDetalles(reservaId) {
+            const modal = document.getElementById('modalDetalles');
+            const contenido = document.getElementById('contenidoModal');
+
+            modal.style.display = 'block';
+            contenido.innerHTML = '<p>Cargando detalles...</p>';
+
+            fetch('/cliente/detalle-reserva/' + reservaId)
+                .then(response => response.text())
+                .then(data => contenido.innerHTML = data)
+                .catch(() => contenido.innerHTML = '<p>Error al cargar detalles</p>');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalDetalles').style.display = 'none';
+        }
+    </script>
+
 </body>
 </html>

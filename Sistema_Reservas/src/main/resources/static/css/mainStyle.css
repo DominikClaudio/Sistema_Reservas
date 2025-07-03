@@ -107,6 +107,19 @@
     background-color: #e5c100;
 }
 
+.clima-info {
+    display: inline-block;
+    margin-left: 15px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.clima-info span {
+    color: #fff;
+    font-size: 14px;
+}
+
+
 /* -------------------
    Vista de Habitaciones
 ------------------- */

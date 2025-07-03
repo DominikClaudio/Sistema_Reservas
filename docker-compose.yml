@@ -15,7 +15,6 @@ services:
       - db_data:/var/lib/mysql
       #- ./data/mysql:/var/lib/mysql# esto es si lo quisiera en una carpeta
 
-
   backend:
     build: ./Sistema_Reservas
     depends_on:
@@ -25,28 +24,89 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: pass
     ports:
-      - "8081:8081"
-  notification:
+      - "8080:8080"
+  servicio_correos:
     build:
-      context: ./Microservicio_Notificaciones_SpringBoot
+      context: ./SR_Servicio_Correos
       dockerfile: Dockerfile
-    container_name: Microservicio_Notificaciones_SpringBoot
+    container_name: SR_Servicio_Correos
     ports:
-      - "8082:8082"
+      - "8081:8081"
     depends_on:
       - rabbitmq
     networks:
       - app-network
 
-  frontend:
+
+  servicio_habitaciones:
     build:
-      context: ./frontend_angular
+      context: ./SR_Servicio_Habitaciones
       dockerfile: Dockerfile
-    container_name: angular-frontend
+    container_name: SR_Servicio_Habitaciones
     ports:
-      - "80:80"
+      - "8083:8083"
     depends_on:
-      - backend
+      - rabbitmq
+    networks:
+      - app-network
+
+  servicio_pisos:
+    build:
+      context: ./SR_Servicio_Pisos
+      dockerfile: Dockerfile
+    container_name: SR_Servicio_Pisos
+    ports:
+      - "8083:8083"
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+
+  servicio_soap:
+    build:
+      context: ./SR_Servicio_SOAP_Reserva
+      dockerfile: Dockerfile
+    container_name: SR_Servicio_SOAP_Reserva
+    ports:
+      - "8085:8085"
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+
+  servicio_tipohabitacion:
+    build:
+      context: ./SR_Servicio_TipoHabitacion
+      dockerfile: Dockerfile
+    container_name: SR_Servicio_TipoHabitacion
+    ports:
+      - "8084:8084"
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"     # Puerto para conexión de apps (AMQP)
+      - "15672:15672"   # Puerto para el panel web
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
+  servicio_alerts_login:
+    build:
+      context: ./Microservicio_Notificaciones_SpringBoot
+      dockerfile: Dockerfile
+    container_name: Microservicio_Notificaciones_SpringBoot
+    ports:
+      - "8086:8086"
+    depends_on:
+      - rabbitmq
     networks:
       - app-network
 
