@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte Ocupabilidad por Pisos</title>
+    <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+<nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+<div class="admin-contenido">
+    <div class="general-container">
+        <form method="post" th:action="@{/admin/reporteOcupabilidad}" class="form-filtro">
+            <div class="primer-container">
+                <div class="sub-primer-container">
+                    <div class="campo">
+                        <label>Desde:</label>
+                        <input type="date" name="fechaEntrada" th:value="${fechaEntrada}" required />
+                    </div>
+                    <div class="campo">
+                        <label>Hasta:</label>
+                        <input type="date" name="fechaSalida" th:value="${fechaSalida}" required />
+                    </div>
+                    <div class="campo">
+                        <button type="submit" class="btn">Buscar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div th:if="${listaOcupabilidad != null}">
+            <div class="encabezado-reporte">
+                <div class="titulo-central">
+                    <h3>Ocupabilidad por pisos del [[${fechaEntrada}]] al [[${fechaSalida}]]</h3>
+                </div>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Piso</th>
+                    <th>Total Reservas</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o : ${listaOcupabilidad}">
+                    <td th:text="${o.piso}"></td>
+                    <td th:text="${o.totalReservas}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

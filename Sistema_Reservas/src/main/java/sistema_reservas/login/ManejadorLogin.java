@@ -2,6 +2,7 @@ package sistema_reservas.login;
 
 import java.io.IOException;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -31,7 +32,7 @@ public class ManejadorLogin implements AuthenticationSuccessHandler {
 
         System.out.println("LOGIN ÉXITOSO para: " + authentication.getName());
 
-        String correo = authentication.getName(); // <- corregido aquí también
+        String correo = authentication.getName();
         Usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
 
         // Envia mensaje a RabbitMQ despues del registro
@@ -41,6 +42,8 @@ public class ManejadorLogin implements AuthenticationSuccessHandler {
         if (usuario != null) {
             request.getSession().setAttribute("usuarioId", usuario.getIdusuario());
             request.getSession().setAttribute("usuarioNombre", usuario.getNombre());
+            HttpSession session = request.getSession();
+            session.setAttribute("usuario", usuario);
         }
 
         response.sendRedirect("/rol/redireccionar");

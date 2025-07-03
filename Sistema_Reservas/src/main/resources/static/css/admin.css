@@ -1,7 +1,72 @@
+/*!* SUB MENUS *!*/
+.dropdown {
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.dropdown > ul.submenu {
+    display: none !important;
+}
+
+.dropdown .submenu {
+    display: none !important;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(0, 0, 0, 0.84);
+    list-style: none !important;
+    padding: 0;
+    margin: 0;
+    min-width: 220px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    border-radius: 0 0 5px 5px;
+}
+
+.dropdown .submenu li a {
+    display: block;
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dropdown .submenu li a:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.dropdown:hover .submenu {
+    display: block !important;
+}
+/*ALERTAS*/
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    font-size: 14px;
+}
+
+.toast.error {
+    background-color: #dc3545;
+}
+
 /* Contenedor principal */
 .admin-contenido{
     background-color: rgba(0, 0, 0, 0.5);
-    padding-top: 40px; 
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .general-container {
@@ -151,7 +216,7 @@ tbody::-webkit-scrollbar-thumb {
 .perfil-header h2 {
     font-size: 26px;
     color: #222;
-    margin: 0;
+    margin-top: -15px;
 }
 
 .perfil-datos {
@@ -213,11 +278,12 @@ tbody::-webkit-scrollbar-thumb {
 /*---------------
   EDITAR PERFIL
   --------------*/
-  
-  .perfil-form {
+
+.perfil-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
+    margin-top: -60px;
 }
 
 .campo-form {
@@ -239,39 +305,295 @@ tbody::-webkit-scrollbar-thumb {
     outline: none;
 }
 
+.campo-form select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+.campo-form select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
 .botones-form {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 20px;
 }
 
 .btn-guardar,
 .btn-cancelar {
-    padding: 10px 20px;
-    border: none;
+    padding: 15px 15px;
     font-size: 16px;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #666;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: -10px;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #ccc;
+}
+
+.btn-guardar {
+    background-color: #28a745;
+    margin-right: 5px;
+}
+
+.btn-cancelar {
+    background-color: #dc3545;
+    margin-left: 5px;
+}
+
+.btn-guardar:hover {
+    background-color: #218838;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancelar:hover {
+    background-color: #c82333;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-editar {
+    background-color: #ffc107;
+    color: #000;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.btn-editar:hover {
+    background-color: #e0a800;
+    color: white;
+}
+
+.btn-actualizar {
+    background-color: #28a745;
+    width: 120px;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 12px;
+}
+
+.btn-actualizar:hover {
+    background-color: #218838;
+}
+
+.btn-cancela {
+    background-color: #6c757d;
+    width: 120px;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 12px;
+    text-decoration: none;
+}
+
+.btn-cancela:hover {
+    background-color: #5a6268;
+}
+
+
+/*-------------------
+ MANTENIMIENTOS
+ -------------------*/
+/* Fondo oscuro y transparente que cubre toda la pantalla */
+.rest-contenido {
+    position: fixed;
+    top: 60px; /* dejando espacio para el navbar */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background-color: rgba(0, 0, 0, 0.6); /* negro con transparencia */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* Contenedor blanco centrado, con transparencia suave */
+.formulario-contenedor {
+    background: rgba(255, 255, 255, 0.9); /* blanco con transparencia */
+    padding: 30px;
+    border-radius: 16px;
+    width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+/* Estilo para títulos */
+.formulario-contenedor h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Estilo para cada grupo de campo */
+.formulario-contenedor div {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Etiquetas */
+.formulario-contenedor label {
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #444;
+}
+
+/* Inputs y selects */
+.formulario-contenedor input,
+.formulario-contenedor select {
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.formulario-contenedor input:focus,
+.formulario-contenedor select:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Botones */
+.formulario-contenedor .btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    text-align: center;
+    text-decoration: none;
+}
+
+.formulario-contenedor .btn-success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.formulario-contenedor .btn-success:hover {
+    background-color: #45a049;
+}
+
+.formulario-contenedor .btn-secondary {
+    background-color: #ccc;
+    color: #333;
+    margin-left: 10px;
+}
+
+.formulario-contenedor .btn-secondary:hover {
+    background-color: #bbb;
+}
+
+/* botones cisculares*/
+.btn-circular {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
     text-decoration: none;
     color: white;
+    font-size: 16px;
+    margin: 0 4px;
+    transition: background 0.3s ease;
+}
+
+.btn-circular.editar {
+    background-color: #007bff;
+}
+
+.btn-circular.eliminar {
+    background-color: #dc3545;
+}
+
+.btn-circular:hover {
+    filter: brightness(1.2);
+}
+
+/*********************
+        REPORTES
+ *-*******************/
+
+.encabezado-reporte {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.titulo-central {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.titulo-reporte {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.subtitulo-reporte {
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.btn-pdf-exportar {
+    background-color: #d93025;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
-.btn-guardar {
-    background-color: #28a745;
+.btn-pdf-exportar:hover {
+    background-color: #b1271b;
+    transform: scale(1.03);
 }
 
-.btn-cancelar {
-    background-color: #dc3545;
-}
-
-.btn-guardar:hover {
-    background-color: #218838;
-}
-
-.btn-cancelar:hover {
-    background-color: #c82333;
-}
-  

@@ -25,7 +25,6 @@
 		<div class="general-contenido">
 			<div class="container text-center mt-5">
 				<div class="carousel-contenedor">
-
 					<div id="filtrosContainer" th:if="${pisos != null}">
 
 						<form th:action="@{/cliente/filtrar-habitaciones}" method="post" class="busqueda-box">
@@ -95,23 +94,33 @@
 							<div class="habitaciones-grid">
 								<div class="habitacion-card" th:each="hab : ${habitaciones}">
 									<!-- Fondo con imagen -->
-									<div class="habitacion-imagen" th:style="'background-image: url(' + @{${hab.imagenurl}} + ')'">
-										<div class="habitacion-overlay">
+									<div class="habitacion-imagen"
+										 th:style="|background-image: url('@{${hab.imagenurl}}');|">
+									<div class="habitacion-overlay">
 											<p class="habitacion-numero">Hab. N° <span th:text="${hab.numhabitacion}">101</span></p>
 										</div>
 									</div>
 
 									<!-- Botón de reservar -->
-									<form th:action="@{/cliente/confirmar-reserva}" method="post" class="form-reservar">
-										<input type="hidden" name="habitacionId" th:value="${hab.idhabitacion}" />
-										<input type="hidden" name="fechaInicio" th:value="${fechaInicio}" />
-										<input type="hidden" name="fechaSalida" th:value="${fechaSalida}" />
-										<input type="hidden" name="tipohabId" th:value="${tipohabId}" />
-										<input type="hidden" name="pisoId" th:value="${pisoSeleccionado}" />
-										<input type="hidden" name="capacidad" th:value="${capacidadPersonas}">
-										<button type="submit" class="btn-reservar">Reservar</button>
-										<button type="submit" name="accion" value="seleccionar" class="btn-seleccion">Añadir a Mi Selección</button>
-									</form>
+									<div style="display: flex; gap: 10px;">
+										<!-- Formulario para Reservar directamente -->
+										<form th:action="@{/cliente/reservar-habitacion}" method="post" class="form-reservar">
+											<input type="hidden" name="habitacionId" th:value="${hab.idhabitacion}" />
+											<input type="hidden" name="fechaEntrada" th:value="${fechaEntrada}" />
+											<input type="hidden" name="fechaSalida" th:value="${fechaSalida}" />
+											<button type="submit" class="btn-reservar">Reservar</button>
+										</form>
+
+										<!-- Formulario para Añadir a Mi Selección -->
+										<form th:action="@{/cliente/agregar-seleccion}" method="post" class="form-reservar">
+											<input type="hidden" name="habitacionId" th:value="${hab.idhabitacion}" />
+											<input type="hidden" name="fechaEntrada" th:value="${fechaEntrada}" />
+											<input type="hidden" name="fechaSalida" th:value="${fechaSalida}" />
+											<button type="submit" class="btn-reservar">Agregar</button>
+										</form>
+
+									</div>
+
 								</div>
 								<div th:if="${#lists.isEmpty(habitaciones)}">
 									<p style="color:red; font-weight: bold;">No hay habitaciones disponibles con la capacidad indicada.</p>

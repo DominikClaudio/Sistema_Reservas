@@ -1,0 +1,32 @@
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://hospedaje.com/soap/reserva"
+           xmlns:tns="http://hospedaje.com/soap/reserva"
+           elementFormDefault="qualified">
+
+    <xs:element name="ConsultarReservaRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="codigoReserva" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ConsultarReservaResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="codReserva" type="xs:string"/>
+                <xs:element name="cliente" type="xs:string"/>
+                <xs:element name="habitacion" type="xs:string"/>
+                <xs:element name="tipo" type="xs:string"/>
+                <xs:element name="piso" type="xs:string"/>
+                <xs:element name="fechaEntrada" type="xs:string"/>
+                <xs:element name="fechaSalida" type="xs:string"/>
+                <xs:element name="precioPorDia" type="xs:decimal"/>
+                <xs:element name="dias" type="xs:int"/>
+                <xs:element name="total" type="xs:decimal"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

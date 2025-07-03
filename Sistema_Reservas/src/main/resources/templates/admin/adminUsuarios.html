@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Panel Administrador</title>
-<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
-<link rel="stylesheet" th:href="@{/css/admin.css}">
+	<title>Panel Administrador</title>
+	<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+	<link rel="stylesheet" th:href="@{/css/admin.css}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-KY4ZZrAoqPPOw7AdC2qEZFa8Ll4Lh3McZfOSpAfNnHuzHqx69n0i+PUOq6tnUVlHqRfs2YIYm7zzJvxRsC+ikA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
@@ -47,7 +48,12 @@
 						<td th:text="${u.dni}"></td>
 						<td th:text="${u.correo}"></td>
 						<td th:text="${u.rolNombre}"></td>
-						<td th:text="${u.rolId}"></td>
+						<td>
+							<a th:href="@{/admin/editar-rol/{id}(id=${u.idusuario})}" class="btn-editar">
+								<i class="fa fa-pen-to-square"></i> Cambiar
+							</a>
+
+						</td>
 					</tr>
 				</tbody>
 			</table>

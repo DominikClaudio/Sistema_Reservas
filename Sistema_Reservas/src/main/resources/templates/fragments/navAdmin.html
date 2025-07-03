@@ -1,8 +1,6 @@
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" th:href="@{/css/generalStyle.css}">
-<link rel="stylesheet" th:href="@{/css/mainStyle.css}">
 <body>
 	<nav class="navbar-admin navbar" th:fragment="navbarAdmin">
 		<div class="navbar-seccion izquierda">
@@ -17,10 +15,25 @@
 					th:classappend="${currentPath.startsWith('/admin/consultas') ? 'activo' : ''}">Consultas</a></li>
 				<li><a th:href="@{/admin/usuarios}"
 					th:classappend="${currentPath.startsWith('/admin/usuarios') ? 'activo' : ''}">Usuarios</a></li>
-				<li><a th:href="@{/admin/mantenimientos}"
-					th:classappend="${currentPath.startsWith('/admin/mantenimientos') ? 'activo' : ''}">Mantenimientos</a></li>
-				<li><a th:href="@{/admin/reportes}"
-					th:classappend="${currentPath.startsWith('/admin/reportes') ? 'activo' : ''}">Reportes</a></li>
+
+				<li class="dropdown" th:classappend="${currentPath.startsWith('/admin/mant') ? 'activo' : ''}">
+					<a href="#" class="dropdown-toggle">Mantenimientos</a>
+					<ul class="submenu">
+						<li><a th:href="@{/admin/mantHabitacion}">Mantenimiento Habitación</a></li>
+						<li><a th:href="@{/admin/mantPiso}">Mantenimiento Piso</a></li>
+						<li><a th:href="@{/admin/mantTipoHab}">Mantenimiento Tipo Habitación</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown" th:classappend="${currentPath.startsWith('/admin/reportes') ? 'activo' : ''}">
+					<a href="#" class="dropdown-toggle">Reportes</a>
+					<ul class="submenu">
+						<li><a th:href="@{/admin/reportesHabitaciones}">Habitaciones reservadas</a></li>
+						<li><a th:href="@{/admin/reportesClientes}">Clientes frecuentes</a></li>
+						<li><a th:href="@{/admin/reportesHabitacionesFrecuentes}">Habitaciones más usadas</a></li>
+						<li><a th:href="@{/admin/reporteOcupabilidad}">Ocupabilidad por piso</a></li>
+					</ul>
+				</li>
 				<li><a th:href="@{/admin/perfil}"
 					th:classappend="${currentPath.startsWith('/admin/perfil') ? 'activo' : ''}">Perfil</a></li>
 			</ul>
@@ -34,5 +47,6 @@
 			</form>
 		</div>
 	</nav>
+
 </body>
 </html>

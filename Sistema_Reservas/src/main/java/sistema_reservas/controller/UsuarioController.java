@@ -65,7 +65,7 @@ public class UsuarioController {
         nuevo.setDni(dni);
         nuevo.setCorreo(correo);
         nuevo.setPassword(passwordEncoder.encode(password));
-        nuevo.setRol(rolCliente); // aquí se asigna el objeto Rol
+        nuevo.setRol(rolCliente);
         System.out.println("Registrando usuario: " + nuevo.getCorreo() + ", Rol: " + nuevo.getRol().getNombre());
 
         usuarioRepository.save(nuevo);

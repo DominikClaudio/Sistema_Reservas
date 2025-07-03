@@ -8,53 +8,61 @@
 </head>
 <body>
 
-<nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
+  <nav th:replace="~{fragments/navCliente :: navbarCliente}"></nav>
 
-<div class="cliente-contenido">
-  <div class="general-contenido">
-    <div class="container mt-4">
-      <h2>Mi Selección de Habitaciones</h2>
+  <div class="cliente-contenido">
+    <div class="general-contenido">
+      <div class="container mt-4">
+        <div class="container mt-4 seleccion-container">
+          <h2>Mi Selección</h2>
 
-      <div th:if="${seleccion == null or #lists.isEmpty(seleccion)}">
-        <p>No tienes habitaciones seleccionadas.</p>
-      </div>
+          <div th:if="${habitacionesSeleccionadas.size() == 0}" class="mensaje-vacio">
+            <p>No has seleccionado habitaciones aún.</p>
+          </div>
 
-      <div th:if="${seleccion != null and !#lists.isEmpty(seleccion)}">
-        <table>
-          <thead>
-          <tr>
-            <th>Número</th>
-            <th>Imagen</th>
-            <th>Fecha Entrada</th>
-            <th>Fecha Salida</th>
-            <th>Acciones</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="item, iterStat : ${seleccion}">
-            <td th:text="${item.numhabitacion}">101</td>
-            <td>
-              <img th:src="@{${item.imagenurl}}" alt="Imagen" width="100">
-            </td>
-            <td th:text="${item.fechaInicio}">2025-06-20</td>
-            <td th:text="${item.fechaFin}">2025-06-22</td>
-            <td>
-              <form th:action="@{/cliente/eliminar-seleccion}" method="post">
-                <input type="hidden" name="indice" th:value="${iterStat.index}">
-                <button type="submit">Eliminar</button>
-              </form>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+          <table th:if="${habitacionesSeleccionadas.size() > 0}" class="seleccion-table">
+            <thead>
+            <tr>
+              <th>N°</th>
+              <th>Tipo</th>
+              <th>Piso</th>
+              <th>Fecha Entrada</th>
+              <th>Fecha Salida</th>
+              <th>Días</th>
+              <th>Precio x Día</th>
+              <th>Total</th>
+              <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="h, stat : ${habitacionesSeleccionadas}">
+              <td th:text="${h.numHabitacion}"></td>
+              <td th:text="${h.tipoHabitacion}"></td>
+              <td th:text="${h.piso}"></td>
+              <td th:text="${h.fechaEntrada}"></td>
+              <td th:text="${h.fechaSalida}"></td>
+              <td th:text="${h.cantidadDias}"></td>
+              <td th:text="${h.precioxDia}"></td>
+              <td th:text="${h.total}"></td>
+              <td>
+                <form th:action="@{/cliente/eliminar-seleccion}" method="post">
+                  <input type="hidden" name="habitacionId" th:value="${h.idhabitacion}" />
+                  <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+            </tbody>
+          </table>
 
-        <form th:action="@{/cliente/confirmar-seleccion}" method="post">
-          <button type="submit" class="btn-reservar">Confirmar Reserva</button>
-        </form>
+          <form th:if="${habitacionesSeleccionadas.size() > 0}" th:action="@{/cliente/reservar-seleccion}" method="post">
+            <button type="submit" class="btn-reservar-todo">Reservar Todo</button>
+          </form>
+
+        </div>
       </div>
     </div>
   </div>
-</div>
+
 
 </body>
 </html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario de Habitaciones</title>
+  <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+  <nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+  <div class="rest-contenido">
+    <div class="formulario-contenedor">
+      <h2 th:text="${habitacion.idhabitacion != null} ? 'Editar Habitación' : 'Registrar Nueva Habitación'"></h2>
+
+      <form th:action="@{/admin/mantHabitacion/guardar}" th:object="${habitacion}" method="post">
+        <input type="hidden" th:field="*{idhabitacion}"/>
+
+        <div>
+          <label for="numhabitacion">Número de Habitación:</label>
+          <input type="text" id="numhabitacion" th:field="*{numhabitacion}" required/>
+        </div>
+
+        <div>
+          <label for="pisoid">Piso:</label>
+          <select id="pisoid" th:field="*{pisoid}" required>
+            <option value="">-- Selecciona un piso --</option>
+            <option th:each="p : ${pisos}" th:value="${p.idpiso}" th:text="${p.nombre}"></option>
+          </select>
+        </div>
+
+        <div>
+          <label for="tipohabid">Tipo de Habitación:</label>
+          <select id="tipohabid" th:field="*{tipohabid}" required>
+            <option value="">-- Selecciona un tipo --</option>
+            <option th:each="t : ${tipos}" th:value="${t.idtipohab}" th:text="${t.nombre}"></option>
+          </select>
+        </div>
+
+        <div>
+          <label for="estadohabid">Estado:</label>
+          <select id="estadohabid" th:field="*{estadohabid}" required>
+            <option value="">-- Selecciona estado --</option>
+            <option value="1" th:selected="${habitacion.estadohabid == 1}">Disponible</option>
+          </select>
+        </div>
+
+        <div>
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <a th:href="@{/admin/mantHabitacion}" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+</body>
+</html>

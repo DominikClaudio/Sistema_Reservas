@@ -1,56 +1,83 @@
 package sistema_reservas.controller;
 
 import java.security.Principal;
-import org.springframework.security.core.Authentication;
-
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sistema_reservas.dao.ClienteDao;
 import sistema_reservas.dao.HabitacionDao;
-import sistema_reservas.dto.HabitacionDto;
-import sistema_reservas.dto.PisoDto;
-import sistema_reservas.model.Reserva;
+import sistema_reservas.dto.*;
+import sistema_reservas.model.Habitaciones;
 import sistema_reservas.model.TipoHabitacion;
 import sistema_reservas.model.Usuario;
+import sistema_reservas.repository.HabitacionRepository;
 import sistema_reservas.repository.TipoHabitacionRepository;
-import sistema_reservas.repository.UsuarioRepository;
-import sistema_reservas.service.ReservaService;
+import sistema_reservas.feign.WeatherClient;
+import sistema_reservas.service.CorreoProducerService;
+import sistema_reservas.service.UsuarioService;
 
 @Controller
 public class ClienteController {
 
     @Autowired
     private TipoHabitacionRepository tipoHabitacionRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    
-    @Autowired
-    private ReservaService reservaService;
-
-
     @Autowired
     private HabitacionDao habitacionDao;
+    @Autowired
+    private ClienteDao clienteDao;
+    @Autowired
+    private HabitacionRepository habitacionRepository;
+    @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
+    private CorreoProducerService correoProducerService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private WeatherClient weatherClient;
+    private final String API_KEY = "28d1a4616c67509a76beb8c9fabf0c8d";
 
-	@GetMapping("/cliente/inicio")
+    @GetMapping("/cliente/inicio")
     public String inicioCliente(HttpServletRequest request, Model model) {
         model.addAttribute("currentPath", request.getRequestURI());
 
         List<TipoHabitacion> tipos = tipoHabitacionRepository.findAll();
         model.addAttribute("tipos", tipos);
+
+
+        try {
+            Map<String, Object> datosClima = weatherClient.obtenerClimaPorCiudad("Lima", API_KEY, "metric", "es");
+
+
+            Map<String, Object> main = (Map<String, Object>) datosClima.get("main");
+            List<Map<String, Object>> weatherList = (List<Map<String, Object>>) datosClima.get("weather");
+            Map<String, Object> weather = weatherList.get(0);
+
+            model.addAttribute("temp", main.get("temp"));
+            model.addAttribute("descripcion", weather.get("description"));
+            model.addAttribute("icono", weather.get("icon"));
+            model.addAttribute("ciudad", datosClima.get("name"));
+        } catch (Exception e) {
+            model.addAttribute("temp", "N/D");
+            model.addAttribute("descripcion", "Sin datos");
+            model.addAttribute("icono", null);
+            model.addAttribute("ciudad", "Ciudad desconocida");
+        }
 
         return "cliente/clienteInicio";
     }
@@ -71,7 +98,6 @@ public class ClienteController {
                     HttpServletRequest request,
                     Model model) {
 
-        // Fechas por defecto
         LocalDate fechaEntrada = LocalDate.now();
         LocalDate fechaSalida = fechaEntrada.plusDays(1);
 
@@ -139,182 +165,278 @@ public class ClienteController {
     }
 
     @GetMapping("/cliente/mi-seleccion")
-    public String miSeleccion(HttpServletRequest request, Model model) {
+    public String miSeleccion(
+            HttpSession session,
+            HttpServletRequest request, Model model) {
+
+        List<HabitacionSeleccionadaDto> seleccion =
+                (List<HabitacionSeleccionadaDto>) session.getAttribute("miSeleccion");
+
+        if (seleccion == null) seleccion = new ArrayList<>();
+
         model.addAttribute("currentPath", request.getRequestURI());
-        return "cliente/clienteMiSeleccion"; // aún por crear
-    }
+        model.addAttribute("habitacionesSeleccionadas", seleccion);
 
-    @GetMapping("/cliente/mis-reservas")
-    public String misReservas(HttpServletRequest request, Model model, Principal principal) {
-        // Ruta actual para navegación activa
-        model.addAttribute("currentPath", request.getRequestURI());
+        System.out.println(">> Lista en sesión:");
+        seleccion.forEach(h -> System.out.println(h.getNumHabitacion() + " - " + h.getFechaEntrada()));
 
-        // Listar las reservas del usuario logueado
-        String correo = principal.getName();
-        List<Reserva> reservas = reservaService.listarReservasPorUsuario(correo);
-        model.addAttribute("reservas", reservas);
-
-        return "cliente/clienteMisReservas";
-    }
-    @GetMapping("/cliente/perfil")
-    public String perfil(HttpServletRequest request, Model model, Principal principal) {
-        model.addAttribute("currentPath", request.getRequestURI());
-
-        // El principal.getName() devuelve el correo que usaste para autenticar.
-        String correo = principal.getName();
-
-
-        // 3) buscar en el repositorio
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(correo);
-        
-
-        if (usuarioOpt.isPresent()) {
-            model.addAttribute("perfil", usuarioOpt.get());
-        } else {
-            // redirigir a creación de perfil o mostrar mensaje
-            return "redirect:/cliente/crearPerfil";
-        }
-
-        return "cliente/clientePerfil"; // aún por crear
-    }
-    /**
-     * Muestra la página de confirmación de reserva.
-     */
-    @RequestMapping(
-    		  value = "/cliente/confirmar-reserva",
-    		  method = { RequestMethod.GET, RequestMethod.POST }
-    		)
-    public String confirmarReserva(
-            HttpServletRequest request,
-            Model model,
-            @RequestParam("tipohabId") int tipohabId,
-            @RequestParam(value = "fechaEntrada", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaEntrada,
-            @RequestParam(value = "fechaSalida", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaSalida,
-            @RequestParam("pisoId") int pisoId,
-            @RequestParam(value ="adultos", required = false) Integer adultos,
-            @RequestParam(value ="ninos", required = false) Integer ninos,
-            Principal principal) { 
-
-        // Si no se pasó fechaEntrada, usar hoy
-        if (fechaEntrada == null) {
-            fechaEntrada = LocalDate.now();
-        }
-        // Lo mismo para fechaSalida si quisieras
-        if (fechaSalida == null) {
-            fechaSalida = fechaEntrada.plusDays(1);
-        }
-
-        if (adultos == null) {
-        	adultos = 1;
-        }
-        if (ninos == null) {
-        	ninos = 1;
-        }
-        // 1) Ruta para nav
-        model.addAttribute("currentPath", request.getRequestURI());
-
-        // 2) Recuperar datos del usuario
-        String correo = principal.getName();
-        
-
-        // 3) buscar en el repositorio
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(correo);
-        
-
-        if (usuarioOpt.isPresent()) {
-            model.addAttribute("perfil", usuarioOpt.get());
-        } else {
-            // redirigir a creación de perfil o mostrar mensaje
-            return "redirect:/";
-        }
-        Usuario usuario = usuarioRepository.findByCorreo(correo)
-            .orElseThrow();
-        model.addAttribute("perfil", usuario);
-
-        // 3) Volcar en el modelo todo lo necesario para confirmar
-        model.addAttribute("tipohabId", tipohabId);
-        model.addAttribute("fechaEntrada", fechaEntrada);
-        model.addAttribute("fechaSalida", fechaSalida);
-        model.addAttribute("pisoId", pisoId);
-        model.addAttribute("adultos", adultos);
-        model.addAttribute("ninos", ninos);
-
-        // 4) Cualquier otra cosa (precio, calculadora, etc.)
-        //    Puedes calcular aquí el total, disponibilidad final, etc.
-        //    model.addAttribute("total", total);
-
-
-        return /*
-        request.getMethod().equals("GET")
-             ? "cliente/confirmarReserva"
-             : */this.guardarReserva(tipohabId,fechaEntrada,fechaSalida,pisoId,adultos,ninos,principal) ; // plantilla Thymeleaf
-    }
-    @PostMapping("/cliente/guardar-reserva")
-    public String guardarReserva(
-            @RequestParam("tipohabId") int tipohabId,
-            @RequestParam("fechaEntrada") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaEntrada,
-            @RequestParam("fechaSalida") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaSalida,
-            @RequestParam("pisoId") int pisoId,
-            @RequestParam("adultos") int adultos,
-            @RequestParam("ninos") int ninos,
-            Principal principal) {
-
-        // Lógica para persistir la reserva (Servicio / DAO)
-        reservaService.crearReserva(principal.getName(), tipohabId, fechaEntrada, fechaSalida, pisoId, adultos, ninos);
-
-        // redirigir a “mis reservas” u otra vista
-        return "redirect:/cliente/mis-reservas";
-    }
-    
-/*
-    // 1) Soportar GET para seleccionar-fechas (redirige al listado de habitaciones)
-    @GetMapping("/seleccionar-fechas")
-    public String seleccionarFechasGet() {
-        return "redirect:/cliente/habitaciones";
-    }
-
-    // 2) Asegúrate de que el método POST devuelve la vista correcta
-    @PostMapping("/seleccionar-fechas")
-    public String seleccionarFechas( // parámetros  ) {
-        // tu lógica existente...
-        return "cliente/clienteHabitaciones";
-    }
-
-    // 3) Mi Selección
-    @GetMapping("/mi-seleccion")
-    public String miSeleccion(Model model) {
-        // carga “seleccion” en el model según tu lógica (session o servicio)
         return "cliente/clienteMiseleccion";
     }
 
-    // 4) Mis Reservas
-    @GetMapping("/mis-reservas")
-    public String misReservas(Model model) {
-        // model.addAttribute("reservas", servicio.obtenerReservas(...));
-        return "cliente/clienteMisReservas";
+    @PostMapping("/cliente/reservar-habitacion")
+    public String reservarHabitacionIndividual(
+            @RequestParam("habitacionId") int habitacionId,
+            @RequestParam("fechaEntrada") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaEntrada,
+            @RequestParam("fechaSalida") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaSalida,
+            HttpSession session,
+            RedirectAttributes redirect
+    ) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        if (usuario == null) {
+            redirect.addFlashAttribute("error", "Tu sesión ha expirado. Por favor inicia sesión nuevamente.");
+            return "redirect:/login";
+        }
+
+        int usuarioId = usuario.getIdusuario();
+        int estadoId = 2;
+        String listaHabitaciones = String.valueOf(habitacionId);
+
+        // NUEVO: devuelve lista de reservas
+        List<Integer> idsReserva = habitacionDao.registrarReservaConDetalles(
+                usuarioId,
+                fechaEntrada,
+                fechaSalida,
+                estadoId,
+                listaHabitaciones
+        );
+
+        if (idsReserva == null || idsReserva.isEmpty()) {
+            redirect.addFlashAttribute("error", "Ocurrió un error al registrar la reserva.");
+            return "redirect:/cliente/habitaciones";
+        }
+
+        // ✅ Notificación para el admin (puedes personalizar según si es 1 o muchas)
+        String mensaje = "Nueva reserva realizada por " + usuario.getNombre() + " " + usuario.getApellido();
+        messagingTemplate.convertAndSend("/tema/notificacion", mensaje);
+
+        // ✅ Enviar correo por cada reserva realizada
+        for (Integer reservaId : idsReserva) {
+            DetalleCorreoDto detalle = clienteDao.obtenerDetalleCorreo(reservaId);
+            correoProducerService.enviarCorreoReserva(detalle);
+        }
+
+        redirect.addFlashAttribute("exito", "Reserva realizada con éxito.");
+        return "redirect:/cliente/mis-reservas";
     }
 
-    // 5) Perfil
-    @GetMapping("/perfil")
-    public String perfil(Model model, Principal principal) {
-        //String correo = principal.getName();
-        //Usuario perfil = usuarioService.obtenerPerfilPorCorreo(correo);
-        // model.addAttribute("perfil", perfil);
+
+    @PostMapping("/cliente/agregar-seleccion")
+    public String agregarSeleccion(
+            @RequestParam("habitacionId") int habitacionId,
+            @RequestParam("fechaEntrada") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaEntrada,
+            @RequestParam("fechaSalida") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaSalida,
+            HttpSession session,
+            RedirectAttributes redirect
+    ) {
+        System.out.println(">> ID recibido: " + habitacionId);
+
+        List<HabitacionSeleccionadaDto> seleccion = (List<HabitacionSeleccionadaDto>) session.getAttribute("miSeleccion");
+        if (seleccion == null) {
+            seleccion = new ArrayList<>();
+        }
+
+        if (seleccion.size() >= 3) {
+            redirect.addFlashAttribute("error", "Solo puedes agregar hasta 3 habitaciones.");
+            return "redirect:/cliente/habitaciones";
+        }
+
+        boolean yaExiste = seleccion.stream().anyMatch(h -> h.getIdhabitacion() == habitacionId);
+        if (yaExiste) {
+            redirect.addFlashAttribute("error", "Ya agregaste esta habitación.");
+            return "redirect:/cliente/habitaciones";
+        }
+
+        System.out.println("ID recibido: " + habitacionId);
+        Habitaciones hab = habitacionRepository.findById(habitacionId).orElse(null);
+        System.out.println("Objeto recuperado: " + hab);
+
+        if (hab == null) {
+            redirect.addFlashAttribute("error", "Habitación no encontrada.");
+            return "redirect:/cliente/habitaciones";
+        }
+
+        HabitacionSeleccionadaDto dto = new HabitacionSeleccionadaDto();
+        dto.setIdhabitacion(habitacionId);
+        dto.setTipoHabitacion(hab.getTipoHabitacion().getNombre());
+        dto.setNumHabitacion(hab.getNumhabitacion());
+        dto.setPiso(hab.getPisos().getNombre());
+        dto.setFechaEntrada(fechaEntrada);
+        dto.setFechaSalida(fechaSalida);
+
+        int dias = (int) ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
+        dto.setCantidadDias(dias);
+        dto.setPrecioxDia(hab.getTipoHabitacion().getPrecioxDia());
+        dto.setTotal(dto.getPrecioxDia() * dias);
+
+        seleccion.add(dto);
+        session.setAttribute("miSeleccion", seleccion);
+
+        System.out.println(">> AGREGANDO habitación ID: " + habitacionId);
+
+        redirect.addFlashAttribute("exito", "Habitación agregada a tu selección.");
+
+        return "redirect:/cliente/mi-seleccion";
+    }
+
+    @PostMapping("/cliente/eliminar-seleccion")
+    public String eliminarDeSeleccion(
+            @RequestParam("habitacionId") int habitacionId,
+            HttpSession session,
+            RedirectAttributes redirect) {
+
+        List<HabitacionSeleccionadaDto> seleccion =
+                (List<HabitacionSeleccionadaDto>) session.getAttribute("miSeleccion");
+
+        if (seleccion != null) {
+            seleccion.removeIf(h -> h.getIdhabitacion() == habitacionId);
+            session.setAttribute("miSeleccion", seleccion);
+            redirect.addFlashAttribute("exito", "Habitación eliminada.");
+        }
+
+        return "redirect:/cliente/mi-seleccion";
+    }
+
+    @PostMapping("/cliente/reservar-seleccion")
+    public String reservarSeleccionCompleta(HttpSession session, RedirectAttributes redirect) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) return "redirect:/login";
+
+        List<HabitacionSeleccionadaDto> seleccion = (List<HabitacionSeleccionadaDto>) session.getAttribute("miSeleccion");
+        if (seleccion == null || seleccion.isEmpty()) {
+            redirect.addFlashAttribute("error", "No tienes habitaciones seleccionadas.");
+            return "redirect:/cliente/mi-seleccion";
+        }
+
+        LocalDate fechaEntrada = seleccion.get(0).getFechaEntrada();
+        LocalDate fechaSalida = seleccion.get(0).getFechaSalida();
+        boolean fechasIguales = seleccion.stream().allMatch(h ->
+                h.getFechaEntrada().equals(fechaEntrada) && h.getFechaSalida().equals(fechaSalida)
+        );
+        if (!fechasIguales) {
+            redirect.addFlashAttribute("error", "Todas las habitaciones deben tener la misma fecha de entrada y salida.");
+            return "redirect:/cliente/mi-seleccion";
+        }
+
+        // 👉 Aquí aplicamos el distinct()
+        String listaHabitaciones = seleccion.stream()
+                .map(h -> h.getIdhabitacion())
+                .distinct() // ✅ Evita habitaciones duplicadas
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        int estadoId = 2;
+
+        // 👇 CAMBIO: ahora obtenemos una lista de IDs
+        List<Integer> idsReserva = habitacionDao.registrarReservaConDetalles(
+                usuario.getIdusuario(),
+                fechaEntrada,
+                fechaSalida,
+                estadoId,
+                listaHabitaciones
+        );
+
+        if (idsReserva == null || idsReserva.isEmpty()) {
+            redirect.addFlashAttribute("error", "Ocurrió un error al registrar la reserva.");
+            return "redirect:/cliente/mi-seleccion";
+        }
+
+        // ✅ Enviar notificación
+        String mensaje = "El cliente " + usuario.getNombre() + " " + usuario.getApellido() +
+                " ha realizado una reserva múltiple de " + seleccion.size() + " habitaciones.";
+        messagingTemplate.convertAndSend("/tema/notificacion", mensaje);
+
+        // ✅ Enviar correo por cada reserva registrada
+        for (Integer id : idsReserva) {
+            DetalleCorreoDto detalle = clienteDao.obtenerDetalleCorreo(id);
+            correoProducerService.enviarCorreoReserva(detalle);
+        }
+
+        // ✅ Limpiar selección
+        session.removeAttribute("miSeleccion");
+
+        redirect.addFlashAttribute("exito", "Se realizaron " + idsReserva.size() + " reservas con éxito.");
+        return "redirect:/cliente/mis-reservas";
+    }
+
+
+    @GetMapping("/cliente/mis-reservas")
+    public String misReservas(
+            HttpSession session,
+            HttpServletRequest request, Model model) {
+
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        if(usuario == null){
+            return "redirect:/login";
+        }
+
+        List<ReservaDto> reservas = habitacionDao.listarMisReservas(usuario.getIdusuario());
+
+        model.addAttribute("currentPath", request.getRequestURI());
+        model.addAttribute("reservas", reservas);
+        return "cliente/clienteMisreservas";
+    }
+
+    @PostMapping("/cliente/cancelar-reserva")
+    public String cancelarReserva(@RequestParam("reservaId") int reservaId, RedirectAttributes redirect) {
+
+        habitacionDao.cancelarReserva(reservaId);
+        redirect.addFlashAttribute("exito", "Reserva cancelada correctamente.");
+        return "redirect:/cliente/mis-reservas";
+    }
+
+    @GetMapping("/cliente/detalle-reserva/{id}")
+    public String mostrarDetalleReserva(@PathVariable("id") int id, Model model) {
+        ReservaListadoDto detalle = clienteDao.obtenerDetalleReserva(id);
+        model.addAttribute("reserva", detalle);
+        return "fragments/modalDetalle :: modal-contenido";
+    }
+
+    @GetMapping("/cliente/perfil")
+    public String gestionPerfil(
+            HttpSession session,
+            HttpServletRequest request, Model model){
+        model.addAttribute("currentPath", request.getRequestURI());
+
+        Integer id = (Integer) session.getAttribute("usuarioId");
+        if(id == null) return "redirect:/login";
+
+        Usuario perfil = usuarioService.obtenerPerfil(id);
+        model.addAttribute("perfil", perfil);
+
         return "cliente/clientePerfil";
     }
 
-    // 6) Editar perfil (GET + POST)
-    @GetMapping("/perfil/editar")
-    public String editarPerfil(Model model, Principal principal) {
+    @GetMapping("/cliente/editar-Perfil")
+    public String gestionEditarPerfil(HttpServletRequest request, Model model, Principal principal) {
+        model.addAttribute("currentPath", request.getRequestURI());
+
         String correo = principal.getName();
-        // Usuario perfil = ...
-        // model.addAttribute("perfil", perfil);
-        return "cliente/clienteEditarPerfil"; // crea también esta vista si la deseas
+        Usuario perfil = usuarioService.obtenerPerfilPorCorreo(correo);
+        model.addAttribute("perfil", perfil);
+
+        return "cliente/clienteEditarPerfil";
     }
-    @PostMapping("/perfil/guardar")
-    public String guardarPerfil(// @ModelAttribute Usuario u ) {
-        // actualiza perfil
+
+    @PostMapping("/cliente/guardar-perfil")
+    public String guardarPerfil(
+            @ModelAttribute Usuario usuario,
+            HttpServletRequest request, Model model) {
+        model.addAttribute("currentPath", request.getRequestURI());
+
+        usuarioService.actualizarPerfil(usuario);
+
         return "redirect:/cliente/perfil";
     }
-    */
 }
