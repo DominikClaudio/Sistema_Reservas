@@ -16,6 +16,7 @@ import sistema_reservas.model.Rol;
 import sistema_reservas.model.Usuario;
 import sistema_reservas.repository.RolRepository;
 import sistema_reservas.repository.UsuarioRepository;
+import sistema_reservas.service.RabbitMQProducer; // <-- Importa el producer
 
 @Controller
 public class UsuarioController {
@@ -28,6 +29,9 @@ public class UsuarioController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private RabbitMQProducer rabbitMQProducer; // <-- Inyecta el producer
 
     // Mostrar formulario de registro
     @GetMapping("/login/registroUsuario")
@@ -65,6 +69,12 @@ public class UsuarioController {
         System.out.println("Registrando usuario: " + nuevo.getCorreo() + ", Rol: " + nuevo.getRol().getNombre());
 
         usuarioRepository.save(nuevo);
+        
+
+        // Envia mensaje a RabbitMQ despues del registro
+        rabbitMQProducer.sendMessage(
+                "Usuario registrado: " + nuevo.getCorreo() + " - " + nuevo.getNombre() + " " + nuevo.getApellido()
+        );
 
         return "redirect:/login";
     }

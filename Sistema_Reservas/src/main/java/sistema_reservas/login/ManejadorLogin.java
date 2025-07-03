@@ -12,12 +12,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import sistema_reservas.model.Usuario;
 import sistema_reservas.repository.UsuarioRepository;
+import sistema_reservas.service.RabbitMQProducer;
 
 @Component
 public class ManejadorLogin implements AuthenticationSuccessHandler {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RabbitMQProducer rabbitMQProducer; // <-- Inyecta el producer
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -30,6 +34,10 @@ public class ManejadorLogin implements AuthenticationSuccessHandler {
         String correo = authentication.getName(); // <- corregido aquí también
         Usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
 
+        // Envia mensaje a RabbitMQ despues del registro
+        rabbitMQProducer.sendMessage(
+                "Usuario Logeado: " +  usuario.getCorreo() + " - " + usuario.getNombre() + " " + usuario.getApellido()
+        );
         if (usuario != null) {
             request.getSession().setAttribute("usuarioId", usuario.getIdusuario());
             request.getSession().setAttribute("usuarioNombre", usuario.getNombre());
