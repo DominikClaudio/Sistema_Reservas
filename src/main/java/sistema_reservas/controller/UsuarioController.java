@@ -29,14 +29,12 @@ public class UsuarioController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    // Mostrar formulario de registro
     @GetMapping("/login/registroUsuario")
     public String mostrarRegistro(HttpServletRequest request, Model model) {
         model.addAttribute("currentPath", request.getRequestURI());
         return "login/registroUsuario";
     }
 
-    // Procesar formulario de registro
     @PostMapping("/login/registroUsuario")
     public String procesarRegistro(@RequestParam("nombre") String nombre,
                                    @RequestParam("apellido") String apellido,
@@ -51,26 +49,21 @@ public class UsuarioController {
           //  return "registroUsuario";
        //}
 
-        // Buscar el rol "CLIENTE" en la tabla roles
         Rol rolCliente = rolRepository.findByNombre("CLIENTE"); // debe devolver un Rol válido
 
-        // Crear el nuevo usuario
         Usuario nuevo = new Usuario();
         nuevo.setNombre(nombre);
         nuevo.setApellido(apellido);
         nuevo.setDni(dni);
         nuevo.setCorreo(correo);
         nuevo.setPassword(passwordEncoder.encode(password));
-        nuevo.setRol(rolCliente); // aquí se asigna el objeto Rol
+        nuevo.setRol(rolCliente);
         System.out.println("Registrando usuario: " + nuevo.getCorreo() + ", Rol: " + nuevo.getRol().getNombre());
 
         usuarioRepository.save(nuevo);
 
         return "redirect:/login";
     }
-
-    
-    //REDIRECCIONAR SEGUN ROL DEL USUARIO
     
     @GetMapping("/rol/redireccionar")
     public String redireccionSegunRol(Authentication auth) {

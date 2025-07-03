@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mantenimiento Tipo de Habitación</title>
+    <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+    <nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+    <div class="admin-contenido">
+        <div class="general-container">
+
+            <div id="toast" class="toast" th:if="${exito}" th:text="${exito}" data-type="exito"></div>
+            <div id="toast" class="toast error" th:if="${error}" th:text="${error}" data-type="error"></div>
+
+            <form th:action="@{/admin/mantTipoHab/nuevo}" method="get" class="form-filtro">
+                <div class="primer-container">
+                    <div class="sub-primer-container">
+                        <div class="campo">
+                            <button type="submit" class="btn btn-primary" style="margin-bottom: 15px;">Registrar Nuevo
+                                Tipo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio/Día</th>
+                    <th>Descripción</th>
+                    <th>Capacidad</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t : ${tipos}">
+                    <td th:text="${t.nombre}"></td>
+                    <td th:text="${t.precioxdia}"></td>
+                    <td th:text="${t.descripcionhab}"></td>
+                    <td th:text="${t.capacidad}"></td>
+                    <td>
+                        <a th:href="@{'/admin/mantTipoHab/editar/' + ${t.idtipohab}}"
+                           class="btn-circular editar"
+                           title="Editar">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a th:href="@{'/admin/mantTipoHab/eliminar/' + ${t.idtipohab}}"
+                           class="btn-circular eliminar"
+                           title="Eliminar"
+                           onclick="return confirm('¿Estás seguro de eliminar este tipo?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const toast = document.querySelector('.toast');
+            if (toast) {
+                // Mostrar el toast
+                toast.style.opacity = '1';
+
+                // Ocultarlo luego de 3 segundos
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -7,6 +7,15 @@
 	<nav class="navbar-cliente navbar" th:fragment="navbarCliente">
 		<div class="navbar-seccion izquierda">
 			<div class="logo">Hospedaje</div>
+
+			<div class="clima-info" th:if="${temp != null}" style="margin-left: 15px;">
+				<span th:title="${descripcion}" style="cursor: help;">
+					<img th:src="'https://openweathermap.org/img/wn/' + ${icono} + '.png'" alt="icono clima"
+						 style="vertical-align: middle; width: 28px;">
+					<span th:text="${temp + '°C'}" style="font-weight: bold; margin-left: 4px;"></span>
+					<span th:text="'(' + ${ciudad} + ')'" style="margin-left: 4px;"></span>
+				</span>
+			</div>
 		</div>
 		
 		<div class="navbar-seccion centro">

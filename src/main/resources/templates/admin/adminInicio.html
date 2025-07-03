@@ -11,6 +11,8 @@
 
 	<div class="admin-contenido">
 		<div class="general-container">
+			<div id="toast" class="toast" th:if="${exito}" th:text="${exito}" data-type="exito"></div>
+			<div id="toast" class="toast error" th:if="${error}" th:text="${error}" data-type="error"></div>
 			<form th:action="@{/admin/inicio}" method="get" class="form-filtro">
 				<div class="primer-container">
 					<div class="sub-primer-container">
@@ -61,6 +63,7 @@
 						<th>Cliente</th>
 						<th>Desde</th>
 						<th>Hasta</th>
+						<th>Acción</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,11 +77,67 @@
 						<td th:text="${h.cliente}"></td>
 						<td th:text="${#dates.format(h.fechaEntrada, 'dd/MM/yyyy')}"></td>
 						<td th:text="${#dates.format(h.fechaSalida, 'dd/MM/yyyy')}"></td>
+						<td>
+							<a th:href="@{/admin/editar-estado/{id}(id=${h.idhabitacion})}" class="btn-editar">Actualizar</a>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+	<script>
+		window.addEventListener('DOMContentLoaded', () => {
+			const toast = document.querySelector('.toast');
+			if (toast) {
+				// Mostrar el toast
+				toast.style.opacity = '1';
+
+				// Ocultarlo luego de 3 segundos
+				setTimeout(() => {
+					toast.style.opacity = '0';
+				}, 3000);
+			}
+		});
+	</script>
+
+	<!-- SONIDO -->
+	<audio id="sonidoNoti" src="/sonidos/noti.mp3" preload="auto"></audio>
+
+	<script>
+		const socket = new SockJS('/ws');
+		const stompClient = Stomp.over(socket);
+
+		stompClient.connect({}, function () {
+			stompClient.subscribe('/tema/notificacion', function (mensaje) {
+				mostrarNotificacion(mensaje.body);
+			});
+		});
+
+		function mostrarNotificacion(texto) {
+			// Reproduce sonido
+			document.getElementById('sonidoNoti').play().catch(e => console.log("Autoplay bloqueado:", e));
+
+			// Crea alerta visual
+			const alerta = document.createElement('div');
+			alerta.innerText = "🔔 " + texto;
+			alerta.style.position = 'fixed';
+			alerta.style.top = '20px';
+			alerta.style.right = '20px';
+			alerta.style.background = '#4CAF50';
+			alerta.style.color = 'white';
+			alerta.style.padding = '10px 20px';
+			alerta.style.borderRadius = '8px';
+			alerta.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+			alerta.style.zIndex = '1000';
+			document.body.appendChild(alerta);
+
+			setTimeout(() => alerta.remove(), 5000);
+		}
+	</script>
+
 
 </body>
 </html>

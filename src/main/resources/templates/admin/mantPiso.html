@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mantenimiento de Pisos</title>
+    <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+    <nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+    <div class="admin-contenido">
+        <div class="general-container">
+
+            <div id="toast" class="toast" th:if="${exito}" th:text="${exito}" data-type="exito"></div>
+            <div id="toast" class="toast error" th:if="${error}" th:text="${error}" data-type="error"></div>
+
+            <form th:action="@{/admin/mantPiso/nuevo}" method="get" class="form-filtro">
+                <div class="primer-container">
+                    <div class="sub-primer-container">
+                        <div class="campo">
+                            <button type="submit" class="btn btn-primary" style="margin-bottom: 15px;">Registrar Nuevo
+                                Piso
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Número de Piso</th>
+                    <th>Nombre del Piso</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${pisos}">
+                    <td th:text="${p.numero}"></td>
+                    <td th:text="${p.nombre}"></td>
+                    <td>
+                        <a th:href="@{'/admin/mantPiso/editar/' + ${p.idpiso}}"
+                           class="btn-circular editar"
+                           title="Editar">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a th:href="@{'/admin/mantPiso/eliminar/' + ${p.idpiso}}"
+                           class="btn-circular eliminar"
+                           title="Eliminar"
+                           onclick="return confirm('¿Estás seguro de eliminar este tipo?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const toast = document.querySelector('.toast');
+            if (toast) {
+                // Mostrar el toast
+                toast.style.opacity = '1';
+
+                // Ocultarlo luego de 3 segundos
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                }, 3000);
+            }
+        });
+    </script>
+
+</body>
+</html>

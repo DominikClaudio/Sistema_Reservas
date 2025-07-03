@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Tipo Habitación</title>
+    <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+    <nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+    <div class="rest-contenido">
+        <div class="formulario-contenedor">
+            <h2 th:text="${tipo.idtipohab != null} ? 'Editar Tipo de Habitación' : 'Registrar Nuevo Tipo'"></h2>
+
+            <form th:action="@{/admin/mantTipoHab/guardar}" th:object="${tipo}" method="post">
+                <input type="hidden" th:field="*{idtipohab}"/>
+
+                <div>
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" required/>
+                </div>
+
+                <div>
+                    <label for="precioxdia">Precio por Día:</label>
+                    <input type="number" id="precioxdia" step="0.01" th:field="*{precioxdia}" required/>
+                </div>
+
+                <div>
+                    <label for="descripcionhab">Descripción:</label>
+                    <input type="text" id="descripcionhab" th:field="*{descripcionhab}" required/>
+                </div>
+
+                <div>
+                    <label for="capacidad">Capacidad:</label>
+                    <select id="capacidad" th:field="*{capacidad}" required>
+                        <option value="2">2 personas</option>
+                        <option value="4">4 personas</option>
+                        <option value="6">6 personas</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a th:href="@{/admin/mantTipoHab}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</body>
+</html>

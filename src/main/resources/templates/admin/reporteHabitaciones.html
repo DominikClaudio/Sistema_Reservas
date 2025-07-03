@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/generalStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+
+    <nav th:replace="~{fragments/navAdmin :: navbarAdmin}"></nav>
+
+    <div class="admin-contenido">
+        <div class="general-container">
+            <form method="post" th:action="@{/admin/reservas-confirmadas}" class="form-filtro">
+                <div class="primer-container">
+                    <div class="sub-primer-container">
+                        <div class="campo">
+                            <label>Desde:</label>
+                            <input type="date" name="fechaEntrada" th:value="${fechaEntrada}" required />
+                        </div>
+
+                        <div class="campo">
+                            <label>Hasta:</label>
+                            <input type="date" name="fechaSalida" th:value="${fechaSalida}" required />
+                        </div>
+
+                        <div class="campo">
+                            <button type="submit" class="btn">Buscar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div th:if="${listaReservas != null}">
+
+                <div class="encabezado-reporte">
+                    <div class="titulo-central">
+                        <h3 class="titulo-reporte">Reporte del [[${fechaEntrada}]] al [[${fechaSalida}]]</h3>
+                        <p class="subtitulo-reporte">[[${totalResumen}]]</p>
+                    </div>
+
+                    <form class="btn-pdf" th:action="@{/admin/exportar-pdf-habitaciones}" method="get" target="_blank">
+                        <input type="hidden" name="fechaEntrada" th:value="${fechaEntrada}">
+                        <input type="hidden" name="fechaSalida" th:value="${fechaSalida}">
+                        <button type="submit" class="btn btn-pdf-exportar">📄 Exportar a PDF</button>
+                    </form>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>N° Habitación</th>
+                        <th>Piso</th>
+                        <th>Cliente</th>
+                        <th>DNI</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Tipo</th>
+                        <th>Precio/Día</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${listaReservas}">
+                        <td th:text="${r.codigoReserva}"></td>
+                        <td th:text="${r.numHabitacion}"></td>
+                        <td th:text="${r.piso}"></td>
+                        <td th:text="${r.nombreCliente + ' ' + r.apellidoCliente}"></td>
+                        <td th:text="${r.dni}"></td>
+                        <td th:text="${r.fechaEntrada + ' ' + r.horaEntrada}"></td>
+                        <td th:text="${r.fechaSalida + ' ' + r.horaSalida}"></td>
+                        <td th:text="${r.tipoHabitacion}"></td>
+                        <td th:text="${r.precioxDia}"></td>
+                        <td th:text="${r.total}"></td>
+                        <td th:text="${r.estado}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

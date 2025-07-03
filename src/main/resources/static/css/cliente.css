@@ -1,3 +1,15 @@
+.clima-info {
+    display: inline-block;
+    margin-left: 15px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.clima-info span {
+    color: #fff;
+    font-size: 14px;
+}
+
 .cliente-contenido {
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5); /* filtro oscuro */
@@ -213,3 +225,398 @@
     width: 100%;
     text-align: center;
 }
+/*-------------
+MI Seleccion
+ -------------*/
+
+.seleccion-container {
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.seleccion-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.seleccion-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.seleccion-table thead {
+    background-color: #ffd700;
+    color: #000;
+}
+
+.seleccion-table th, .seleccion-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.seleccion-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn-eliminar, .btn-reservar-todo {
+    padding: 8px 14px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-eliminar {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-eliminar:hover {
+    background-color: #c0392b;
+}
+
+.btn-reservar-todo {
+    background-color: #2ecc71;
+    color: white;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-reservar-todo:hover {
+    background-color: #27ae60;
+}
+
+.mensaje-vacio {
+    text-align: center;
+    color: #777;
+    font-size: 18px;
+    margin-top: 30px;
+}
+
+/*------------
+  MIS RESERVAS
+------------*/
+
+.tabla-reservas {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tabla-reservas thead {
+    background-color: #ffd700;
+    color: #000;
+}
+
+.tabla-reservas th, .tabla-reservas td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-reservas tbody {
+    display: block;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.tabla-reservas thead, .tabla-reservas tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.tabla-reservas tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn-misreservas {
+    color: white;
+    border: none;
+    cursor: pointer;
+    min-width: 100px;
+    text-align: center;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.btn-detalles {
+    background-color: rgba(2, 117, 216, 0.8);
+    width: 105px;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+}
+
+.btn-cancelarRe {
+    background-color: rgba(197, 37, 37, 0.81);
+    margin-bottom: 5px;
+    width: 105px;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+}
+
+/*  MODAL  */
+.modal-detalles {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 120px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.close-modal {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #000;
+}
+
+/*-------------
+  VISTA PERFIL
+-------------*/
+
+.perfil-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 92.2%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.perfil-card {
+    width: 100%;
+    max-width: 400px;
+    height:550px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    transition: 0.3s;
+}
+
+.perfil-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.perfil-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 3px solid #ffd700;
+}
+
+.perfil-header h2 {
+    font-size: 26px;
+    color: #222;
+    margin-top: -15px;
+}
+
+.perfil-datos {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.dato {
+    display: flex;
+    justify-content: space-between;
+    font-size: 17px;
+    color: #444;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.dato label {
+    margin-left: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.dato span {
+    margin-right: 20px;
+    color: #555;
+    font-weight: 500;
+}
+
+.dato-boton{
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background-color: #ffd700;
+    color: #666;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #ccc;
+}
+
+.btn-icon:hover {
+    background-color: #e5c100;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/*---------------
+  EDITAR PERFIL
+  --------------*/
+
+.perfil-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: -60px;
+}
+
+.campo-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.campo-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+.botones-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-guardar,
+.btn-cancelar {
+    padding: 15px 15px;
+    font-size: 16px;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #666;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: -10px;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #ccc;
+}
+
+.btn-guardar {
+    background-color: #28a745;
+    margin-right: 5px;
+}
+
+.btn-cancelar {
+    background-color: #dc3545;
+    margin-left: 5px;
+}
+
+.btn-guardar:hover {
+    background-color: #218838;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cancelar:hover {
+    background-color: #c82333;
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.password-container {
+    position: relative;
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input[type="password"],
+.password-wrapper input[type="text"] {
+    width: 100%;
+    padding-right: 40px; /* espacio para el ojito */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #666;
+    z-index: 2;
+}
+
+.toggle-password:hover {
+    color: #000;
+}
+
